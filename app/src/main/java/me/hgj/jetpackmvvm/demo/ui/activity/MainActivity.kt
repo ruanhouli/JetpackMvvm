@@ -1,5 +1,8 @@
 package me.hgj.jetpackmvvm.demo.ui.activity
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.WindowManager
@@ -21,7 +24,18 @@ import me.hgj.jetpackmvvm.network.manager.NetState
  */
 class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
+    companion object {
+        fun startAction(fromActivity: Activity) {
+            fromActivity.apply {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
+        }
+    }
+
     var exitTime = 0L
+
     override fun layoutId() = R.layout.activity_main
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -44,11 +58,12 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
                     }
                 }
             }
-            })
+        })
         appViewModel.appColor.value?.let {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
             supportActionBar?.setBackgroundDrawable(ColorDrawable(it))
-            StatusBarUtil.setColor(this, it, 0) }
+            StatusBarUtil.setColor(this, it, 0)
+        }
     }
 
     override fun createObserver() {

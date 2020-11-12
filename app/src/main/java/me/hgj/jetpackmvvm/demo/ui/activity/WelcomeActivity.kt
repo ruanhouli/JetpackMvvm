@@ -61,10 +61,7 @@ class WelcomeActivity : BaseActivity<BaseViewModel, ActivityWelcomeBinding>() {
             //不是第一次打开App 0.3秒后自动跳转到主页
             welcome_image.visible()
             mViewPager.postDelayed({
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-                //带点渐变动画
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                MainActivity.startAction(this@WelcomeActivity)
             }, 300)
         }
     }
@@ -72,10 +69,7 @@ class WelcomeActivity : BaseActivity<BaseViewModel, ActivityWelcomeBinding>() {
     inner class ProxyClick {
         fun toMain() {
             CacheUtil.setFirst(false)
-            startActivity(Intent(this@WelcomeActivity, MainActivity::class.java))
-            finish()
-            //带点渐变动画
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            MainActivity.startAction(this@WelcomeActivity)
         }
     }
 
