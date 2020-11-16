@@ -171,8 +171,8 @@ object SettingUtil {
     /**
      * 设置loading的颜色 加载布局
      */
-    fun setLoadingColor(color:Int,loadsir: LoadService<Any>) {
-        loadsir.setCallBack(LoadingCallback::class.java) { _, view ->
+    fun setLoadingColor(color:Int, loadService: LoadService<Any>) {
+        loadService.setCallBack(LoadingCallback::class.java) { _, view ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 view.findViewById<ProgressBar>(R.id.loading_progress).indeterminateTintMode = PorterDuff.Mode.SRC_ATOP
                 view.findViewById<ProgressBar>(R.id.loading_progress).indeterminateTintList = getOneColorStateList(color)

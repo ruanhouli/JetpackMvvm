@@ -62,7 +62,7 @@ class IntegralFragment : BaseFragment<IntegralViewModel, FragmentIntegralBinding
                         nav().navigateAction(R.id.action_to_webFragment,
                             Bundle().apply {
                                 putParcelable(
-                                    "bannerdata",
+                                    "bannerData",
                                     BannerResponse(
                                         title = "积分规则",
                                         url = "https://www.wanandroid.com/blog/show/2653"

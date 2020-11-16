@@ -59,7 +59,7 @@ class WebFragment : BaseFragment<WebViewModel, FragmentWebBinding>() {
                 mViewModel.collectType = CollectType.Ariticle.type
             }
             //点击首页轮播图进来的
-            getParcelable<BannerResponse>("bannerdata")?.let {
+            getParcelable<BannerResponse>("bannerData")?.let {
                 mViewModel.ariticleId = it.id
                 mViewModel.showTitle = it.title
                 //从首页轮播图 没法判断是否已经收藏过，所以直接默认没有收藏

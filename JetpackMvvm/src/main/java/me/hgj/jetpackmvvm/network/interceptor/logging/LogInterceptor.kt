@@ -1,6 +1,7 @@
 package me.hgj.jetpackmvvm.network.interceptor.logging
 
 import android.util.Log
+import me.hgj.jetpackmvvm.ext.util.logd
 import me.hgj.jetpackmvvm.util.CharacterHandler.Companion.jsonFormat
 import me.hgj.jetpackmvvm.util.UrlEncoderUtils.Companion.hasUrlEncoded
 import me.hgj.jetpackmvvm.util.ZipHelper.Companion.decompressForGzip
@@ -45,7 +46,7 @@ class LogInterceptor : Interceptor {
         originalResponse = try {
             chain.proceed(request)
         } catch (e: Exception) {
-            Log.d("Http Error: %s", e.message)
+            "Http Error: ${e.message}".logd()
             throw e
         }
         val t2 = if (logResponse) System.nanoTime() else 0

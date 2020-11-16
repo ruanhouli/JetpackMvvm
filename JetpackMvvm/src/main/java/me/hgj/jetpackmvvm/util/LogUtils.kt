@@ -3,6 +3,8 @@ package me.hgj.jetpackmvvm.util
 import android.text.TextUtils
 import android.util.Log
 import me.hgj.jetpackmvvm.ext.util.jetpackMvvmLog
+import me.hgj.jetpackmvvm.ext.util.logd
+import me.hgj.jetpackmvvm.ext.util.logw
 
 /**
  * 作者　: hegaojian
@@ -15,7 +17,7 @@ object LogUtils {
         if (!jetpackMvvmLog || TextUtils.isEmpty(msg)) {
             return
         }
-        Log.d(tag, msg)
+        msg?.logd(tag!!)
     }
 
     fun debugInfo(msg: String?) {
@@ -29,7 +31,7 @@ object LogUtils {
         if (!jetpackMvvmLog || TextUtils.isEmpty(msg)) {
             return
         }
-        Log.w(tag, msg)
+        msg?.logw(tag!!)
     }
 
     fun warnInfo(msg: String?) {

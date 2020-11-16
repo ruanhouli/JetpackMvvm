@@ -1,5 +1,6 @@
 package me.hgj.jetpackmvvm.demo.ui.fragment.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.fragment.app.viewModels
@@ -9,7 +10,6 @@ import com.blankj.utilcode.util.ConvertUtils
 import com.kingja.loadsir.core.LoadService
 import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import com.zhpan.bannerview.BannerViewPager
-import kotlinx.android.synthetic.main.include_banner.*
 import kotlinx.android.synthetic.main.include_list.*
 import kotlinx.android.synthetic.main.include_recyclerview.*
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -30,7 +30,6 @@ import me.hgj.jetpackmvvm.demo.viewmodel.state.HomeViewModel
 import me.hgj.jetpackmvvm.ext.nav
 import me.hgj.jetpackmvvm.ext.navigateAction
 import me.hgj.jetpackmvvm.ext.parseState
-import splitties.collections.forEachReversedByIndex
 
 /**
  * 作者　: hegaojian
@@ -43,7 +42,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     private val articleAdapter: AriticleAdapter by lazy { AriticleAdapter(arrayListOf(), true) }
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     //recyclerview的底部加载view 因为在首页要动态改变他的颜色，所以加了他这个字段
     private lateinit var footView: DefineLoadMoreView
@@ -56,12 +55,11 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     override fun layoutId() = R.layout.fragment_home
 
-    private val resultData = ArrayList<String>()
     override fun initView(savedInstanceState: Bundle?) {
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             requestHomeViewModel.getBannerData()
             requestHomeViewModel.getHomeData(true)
         }
@@ -101,7 +99,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                     requestCollectViewModel.collect(item.id)
                 }
             }
-            setOnItemClickListener { adapter, view, position ->
+            setOnItemClickListener { _, _, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
                     putParcelable(
                         "ariticleData",
@@ -110,7 +108,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 })
             }
             addChildClickViewIds(R.id.item_home_author, R.id.item_project_author)
-            setOnItemChildClickListener { adapter, view, position ->
+            setOnItemChildClickListener { _, view, position ->
                 when (view.id) {
                     R.id.item_home_author, R.id.item_project_author -> {
                         nav().navigateAction(
@@ -132,36 +130,37 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
      */
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         //请求轮播图数据
         requestHomeViewModel.getBannerData()
         //请求文章列表数据
         requestHomeViewModel.getHomeData(true)
     }
 
+    @SuppressLint("InflateParams")
     override fun createObserver() {
         requestHomeViewModel.run {
             //监听首页文章列表请求的数据变化
             homeDataState.observe(viewLifecycleOwner, Observer {
                 //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-                loadListData(it, articleAdapter, loadsir, recyclerView, swipeRefresh)
+                loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
             })
             //监听轮播图请求的数据变化
             bannerData.observe(viewLifecycleOwner, Observer { resultState ->
                 parseState(resultState, { data ->
                     //请求轮播图数据成功，添加轮播图到headview ，如果等于0说明没有添加过头部，添加一个
                     if (recyclerView.headerCount == 0) {
-                        val headview = LayoutInflater.from(context).inflate(R.layout.include_banner, null).apply {
+                        val headerView = LayoutInflater.from(context).inflate(R.layout.include_banner, null).apply {
                                     findViewById<BannerViewPager<BannerResponse, HomeBannerViewHolder>>(R.id.banner_view).apply {
                                         adapter = HomeBannerAdapter()
                                         setLifecycleRegistry(lifecycle)
                                         setOnPageClickListener {
-                                            nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {putParcelable("bannerdata", data[it])})
+                                            nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {putParcelable("bannerData", data[it])})
                                         }
                                         create(data)
                                     }
                                 }
-                        recyclerView.addHeaderView(headview)
+                        recyclerView.addHeaderView(headerView)
                     }
                 })
             })
@@ -202,7 +201,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             })
             //监听全局的主题颜色改变
             appColor.observe(viewLifecycleOwner, Observer {
-                setUiTheme(it, toolbar, floatbtn, swipeRefresh, loadsir, footView)
+                setUiTheme(it, toolbar, floatbtn, swipeRefresh, loadService, footView)
             })
             //监听全局的列表动画改编
             appAnimation.observe(viewLifecycleOwner, Observer {

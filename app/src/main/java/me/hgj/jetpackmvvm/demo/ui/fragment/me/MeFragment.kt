@@ -127,7 +127,7 @@ class MeFragment : BaseFragment<MeViewModel, FragmentMeBinding>() {
         fun about() {
             nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
                 putParcelable(
-                    "bannerdata",
+                    "bannerData",
                     BannerResponse(
                         title = "玩Android网站",
                         url = "https://www.wanandroid.com/"

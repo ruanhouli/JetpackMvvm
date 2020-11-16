@@ -25,7 +25,7 @@ class MainFragment : BaseFragment<MainViewModel, FragmentMainBinding>() {
         //初始化viewpager2
         mainViewpager.initMain(this)
         //初始化 bottomBar
-        mainBottom.init{
+        mainBottom.init {
             when (it) {
                 R.id.menu_main -> mainViewpager.setCurrentItem(0, false)
                 R.id.menu_project -> mainViewpager.setCurrentItem(1, false)
@@ -34,7 +34,7 @@ class MainFragment : BaseFragment<MainViewModel, FragmentMainBinding>() {
                 R.id.menu_me -> mainViewpager.setCurrentItem(4, false)
             }
         }
-        mainBottom.interceptLongClick(R.id.menu_main,R.id.menu_project,R.id.menu_system,R.id.menu_public,R.id.menu_me)
+        mainBottom.interceptLongClick(R.id.menu_main, R.id.menu_project, R.id.menu_system, R.id.menu_public, R.id.menu_me)
     }
 
     override fun createObserver() {

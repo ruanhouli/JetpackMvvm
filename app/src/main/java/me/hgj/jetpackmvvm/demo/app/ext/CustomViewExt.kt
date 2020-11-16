@@ -89,20 +89,20 @@ fun LoadService<*>.showLoading() {
 }
 
 fun loadServiceInit(view: View, callback: () -> Unit): LoadService<Any> {
-    val loadsir = LoadSir.getDefault().register(view) {
+    val loadService = LoadSir.getDefault().register(view) {
         //点击重试时触发的操作
         callback.invoke()
     }
-    loadsir.showSuccess()
-    SettingUtil.setLoadingColor(SettingUtil.getColor(appContext), loadsir)
-    return loadsir
+    loadService.showSuccess()
+    SettingUtil.setLoadingColor(SettingUtil.getColor(appContext), loadService)
+    return loadService
 }
 
 //绑定普通的Recyclerview
 fun RecyclerView.init(
-    layoutManger: RecyclerView.LayoutManager,
-    bindAdapter: RecyclerView.Adapter<*>,
-    isScroll: Boolean = true
+        layoutManger: RecyclerView.LayoutManager,
+        bindAdapter: RecyclerView.Adapter<*>,
+        isScroll: Boolean = true
 ): RecyclerView {
     layoutManager = layoutManger
     setHasFixedSize(true)
@@ -113,9 +113,9 @@ fun RecyclerView.init(
 
 //绑定SwipeRecyclerView
 fun SwipeRecyclerView.init(
-    layoutManger: RecyclerView.LayoutManager,
-    bindAdapter: RecyclerView.Adapter<*>,
-    isScroll: Boolean = true
+        layoutManger: RecyclerView.LayoutManager,
+        bindAdapter: RecyclerView.Adapter<*>,
+        isScroll: Boolean = true
 ): SwipeRecyclerView {
     layoutManager = layoutManger
     setHasFixedSize(true)
@@ -190,9 +190,9 @@ fun Toolbar.init(titleStr: String = ""): Toolbar {
  * 初始化有返回键的toolbar
  */
 fun Toolbar.initClose(
-    titleStr: String = "",
-    backImg: Int = R.drawable.ic_back,
-    onBack: (toolbar: Toolbar) -> Unit
+        titleStr: String = "",
+        backImg: Int = R.drawable.ic_back,
+        onBack: (toolbar: Toolbar) -> Unit
 ): Toolbar {
     setBackgroundColor(SettingUtil.getColor(appContext))
     title = titleStr.toHtml()
@@ -212,7 +212,7 @@ fun setUiTheme(color: Int, vararg anyList: Any?) {
             when (it) {
                 is LoadService<*> -> SettingUtil.setLoadingColor(color, it as LoadService<Any>)
                 is FloatingActionButton -> it.backgroundTintList =
-                    SettingUtil.getOneColorStateList(color)
+                        SettingUtil.getOneColorStateList(color)
                 is SwipeRefreshLayout -> it.setColorSchemeColors(color)
                 is DefineLoadMoreView -> it.setLoadViewColor(SettingUtil.getOneColorStateList(color))
                 is BottomNavigationViewEx -> {
@@ -241,10 +241,10 @@ fun BaseQuickAdapter<*, *>.setAdapterAnimation(mode: Int) {
 }
 
 fun MagicIndicator.bindViewPager2(
-    viewPager: ViewPager2,
-    mDataList: ArrayList<ClassifyResponse> = arrayListOf(),
-    mStringList: ArrayList<String> = arrayListOf(),
-    action: (index: Int) -> Unit = {}) {
+        viewPager: ViewPager2,
+        mDataList: ArrayList<ClassifyResponse> = arrayListOf(),
+        mStringList: ArrayList<String> = arrayListOf(),
+        action: (index: Int) -> Unit = {}) {
     val commonNavigator = CommonNavigator(appContext)
     commonNavigator.adapter = object : CommonNavigatorAdapter() {
         override fun getCount(): Int {
@@ -254,6 +254,7 @@ fun MagicIndicator.bindViewPager2(
                 mStringList.size
             }
         }
+
         override fun getTitleView(context: Context, index: Int): IPagerTitleView {
             return ScaleTransitionPagerTitleView(appContext).apply {
                 text = if (mDataList.size != 0) {
@@ -270,6 +271,7 @@ fun MagicIndicator.bindViewPager2(
                 }
             }
         }
+
         override fun getIndicator(context: Context): IPagerIndicator {
             return LinePagerIndicator(context).apply {
                 mode = LinePagerIndicator.MODE_EXACTLY
@@ -295,9 +297,9 @@ fun MagicIndicator.bindViewPager2(
         }
 
         override fun onPageScrolled(
-            position: Int,
-            positionOffset: Float,
-            positionOffsetPixels: Int
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
         ) {
             super.onPageScrolled(position, positionOffset, positionOffsetPixels)
             this@bindViewPager2.onPageScrolled(position, positionOffset, positionOffsetPixels)
@@ -311,9 +313,9 @@ fun MagicIndicator.bindViewPager2(
 }
 
 fun ViewPager2.init(
-    fragment: Fragment,
-    fragments: ArrayList<Fragment>,
-    isUserInputEnabled: Boolean = true
+        fragment: Fragment,
+        fragments: ArrayList<Fragment>,
+        isUserInputEnabled: Boolean = true
 ): ViewPager2 {
     //是否可滑动
     this.isUserInputEnabled = isUserInputEnabled
@@ -353,6 +355,7 @@ fun ViewPager2.initMain(fragment: Fragment): ViewPager2 {
                 }
             }
         }
+
         override fun getItemCount() = 5
     }
     return this
@@ -372,15 +375,28 @@ fun BottomNavigationViewEx.init(navigationItemSelectedAction: (Int) -> Unit): Bo
     return this
 }
 
+fun BottomNavigationViewEx.init2(navigationItemSelectAction: (Int) -> Unit): BottomNavigationViewEx {
+    enableAnimation(true)
+    enableShiftingMode(false)
+    enableItemShiftingMode(true)
+    itemIconTintList = SettingUtil.getColorStateList(SettingUtil.getColor(appContext))
+    itemTextColor = SettingUtil.getColorStateList(appContext)
+    setTextSize(12F)
+    setOnNavigationItemSelectedListener {
+        navigationItemSelectAction.invoke(it.itemId)
+        true
+    }
+    return this
+}
 
 /**
  * 拦截BottomNavigation长按事件 防止长按时出现Toast ---- 追求完美的大屌群友提的bug
  * @receiver BottomNavigationViewEx
  * @param ids IntArray
  */
-fun BottomNavigationViewEx.interceptLongClick(vararg ids:Int) {
+fun BottomNavigationViewEx.interceptLongClick(vararg ids: Int) {
     val bottomNavigationMenuView: ViewGroup = (this.getChildAt(0) as ViewGroup)
-    for (index in ids.indices){
+    for (index in ids.indices) {
         bottomNavigationMenuView.getChildAt(index).findViewById<View>(ids[index]).setOnLongClickListener {
             true
         }
@@ -395,10 +411,10 @@ fun hideSoftKeyboard(activity: Activity?) {
         val view = act.currentFocus
         view?.let {
             val inputMethodManager =
-                act.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                    act.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(
-                view.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
+                    view.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
             )
         }
     }
@@ -408,11 +424,11 @@ fun hideSoftKeyboard(activity: Activity?) {
  * 加载列表数据
  */
 fun <T> loadListData(
-    data: ListDataUiState<T>,
-    baseQuickAdapter: BaseQuickAdapter<T, *>,
-    loadService: LoadService<*>,
-    recyclerView: SwipeRecyclerView,
-    swipeRefreshLayout: SwipeRefreshLayout
+        data: ListDataUiState<T>,
+        baseQuickAdapter: BaseQuickAdapter<T, *>,
+        loadService: LoadService<*>,
+        recyclerView: SwipeRecyclerView,
+        swipeRefreshLayout: SwipeRefreshLayout
 ) {
     swipeRefreshLayout.isRefreshing = false
 
