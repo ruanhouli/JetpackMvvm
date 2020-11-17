@@ -4,10 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.demo.app.network.apiService
 import me.hgj.jetpackmvvm.demo.app.network.stateCallback.ListDataUiState
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.BannerResponse
 import me.hgj.jetpackmvvm.demo.data.repository.request.HttpRequestCoroutine
-import me.hgj.jetpackmvvm.demo.data.repository.request.HttpRequestManger
 import me.hgj.jetpackmvvm.ext.request
 import me.hgj.jetpackmvvm.state.ResultState
 
@@ -25,7 +24,7 @@ class RequestHomeViewModel : BaseViewModel() {
     var pageNo = 0
 
     //首页文章列表数据
-    var homeDataState: MutableLiveData<ListDataUiState<AriticleResponse>> = MutableLiveData()
+    var homeDataState: MutableLiveData<ListDataUiState<ArticleResponse>> = MutableLiveData()
 
     //首页轮播图数据
     var bannerData: MutableLiveData<ResultState<ArrayList<BannerResponse>>> = MutableLiveData()
@@ -58,7 +57,7 @@ class RequestHomeViewModel : BaseViewModel() {
                     isSuccess = false,
                     errMessage = it.errorMsg,
                     isRefresh = isRefresh,
-                    listData = arrayListOf<AriticleResponse>()
+                    listData = arrayListOf<ArticleResponse>()
                 )
             homeDataState.value = listDataUiState
         })

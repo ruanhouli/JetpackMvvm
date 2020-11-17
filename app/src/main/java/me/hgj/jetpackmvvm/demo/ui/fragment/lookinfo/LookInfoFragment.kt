@@ -17,7 +17,7 @@ import me.hgj.jetpackmvvm.demo.app.ext.*
 import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.SpaceItemDecoration
 import me.hgj.jetpackmvvm.demo.data.model.bean.CollectBus
 import me.hgj.jetpackmvvm.demo.databinding.FragmentLookinfoBinding
-import me.hgj.jetpackmvvm.demo.ui.adapter.AriticleAdapter
+import me.hgj.jetpackmvvm.demo.ui.adapter.ArticleAdapter
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestCollectViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestLookInfoViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.state.LookInfoViewModel
@@ -35,10 +35,10 @@ class LookInfoFragment : BaseFragment<LookInfoViewModel, FragmentLookinfoBinding
     private var shareId = 0
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     //适配器
-    private val articleAdapter: AriticleAdapter by lazy { AriticleAdapter(arrayListOf(), true) }
+    private val articleAdapter: ArticleAdapter by lazy { ArticleAdapter(arrayListOf(), true) }
 
     //收藏viewmodel
     private val requestCollectViewModel: RequestCollectViewModel by viewModels()
@@ -59,8 +59,8 @@ class LookInfoFragment : BaseFragment<LookInfoViewModel, FragmentLookinfoBinding
         toolbar.initClose("他的信息") {
             nav().navigateUp()
         }
-        loadsir = loadServiceInit(share_linear) {
-            loadsir.showLoading()
+        loadService = loadServiceInit(share_linear) {
+            loadService.showLoading()
             requestLookInfoViewModel.getLookinfo(shareId, true)
         }
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
@@ -84,7 +84,7 @@ class LookInfoFragment : BaseFragment<LookInfoViewModel, FragmentLookinfoBinding
             setOnItemClickListener { adapter, view, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
                     putParcelable(
-                        "ariticleData",
+                        "articleData",
                         articleAdapter.data[position - this@LookInfoFragment.recyclerView.headerCount]
                     )
                 })
@@ -94,7 +94,7 @@ class LookInfoFragment : BaseFragment<LookInfoViewModel, FragmentLookinfoBinding
 
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         requestLookInfoViewModel.getLookinfo(shareId, true)
     }
 
@@ -105,7 +105,7 @@ class LookInfoFragment : BaseFragment<LookInfoViewModel, FragmentLookinfoBinding
         })
         requestLookInfoViewModel.shareListDataUistate.observe(viewLifecycleOwner, Observer {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, articleAdapter, loadsir, recyclerView, swipeRefresh)
+            loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
         })
         requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
             if (it.isSuccess) {

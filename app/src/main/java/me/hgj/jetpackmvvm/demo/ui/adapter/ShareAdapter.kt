@@ -5,7 +5,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import me.hgj.jetpackmvvm.demo.R
 import me.hgj.jetpackmvvm.demo.app.ext.setAdapterAnimation
 import me.hgj.jetpackmvvm.demo.app.util.SettingUtil
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 
 
 /**
@@ -13,15 +13,15 @@ import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
  * @Author:         hegaojian
  * @CreateDate:     2019/9/1 9:52
  */
-class ShareAdapter(data: ArrayList<AriticleResponse>) :
-    BaseQuickAdapter<AriticleResponse, BaseViewHolder>(
+class ShareAdapter(data: ArrayList<ArticleResponse>) :
+    BaseQuickAdapter<ArticleResponse, BaseViewHolder>(
         R.layout.item_share_ariticle, data
     ) {
     init {
         setAdapterAnimation(SettingUtil.getListMode())
     }
 
-    override fun convert(helper: BaseViewHolder, item: AriticleResponse) {
+    override fun convert(helper: BaseViewHolder, item: ArticleResponse) {
         //赋值
         item.run {
             helper.setText(R.id.item_share_title, title)

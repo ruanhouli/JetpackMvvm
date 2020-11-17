@@ -51,7 +51,7 @@ class WebFragment : BaseFragment<WebViewModel, FragmentWebBinding>() {
         setHasOptionsMenu(true)
         arguments?.run {
             //点击文章进来的
-            getParcelable<AriticleResponse>("ariticleData")?.let {
+            getParcelable<ArticleResponse>("articleData")?.let {
                 mViewModel.ariticleId = it.id
                 mViewModel.showTitle = it.title
                 mViewModel.collect = it.collect

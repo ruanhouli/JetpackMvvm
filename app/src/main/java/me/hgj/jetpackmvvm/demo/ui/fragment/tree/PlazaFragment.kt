@@ -2,11 +2,9 @@ package me.hgj.jetpackmvvm.demo.ui.fragment.tree
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ConvertUtils
 import com.kingja.loadsir.core.LoadService
-import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import kotlinx.android.synthetic.main.include_list.*
 import kotlinx.android.synthetic.main.include_recyclerview.*
 import me.hgj.jetpackmvvm.demo.R
@@ -16,7 +14,7 @@ import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.DefineLoadMoreView
 import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.SpaceItemDecoration
 import me.hgj.jetpackmvvm.demo.data.model.bean.CollectBus
 import me.hgj.jetpackmvvm.demo.databinding.IncludeListBinding
-import me.hgj.jetpackmvvm.demo.ui.adapter.AriticleAdapter
+import me.hgj.jetpackmvvm.demo.ui.adapter.ArticleAdapter
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestCollectViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestTreeViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.state.TreeViewModel
@@ -31,9 +29,9 @@ import me.hgj.jetpackmvvm.ext.navigateAction
 class PlazaFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
-    //收藏viewmodel
+    //收藏viewModel
     private val requestCollectViewModel: RequestCollectViewModel by viewModels()
 
     //请求ViewModel
@@ -42,25 +40,25 @@ class PlazaFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
     //recyclerview的底部加载view 因为要在首页动态改变他的颜色，所以加了他这个字段
     private lateinit var footView: DefineLoadMoreView
 
-    private val articleAdapter: AriticleAdapter by lazy {
-        AriticleAdapter(arrayListOf(), showTag = true)
+    private val articleAdapter: ArticleAdapter by lazy {
+        ArticleAdapter(arrayListOf(), showTag = true)
     }
 
     override fun layoutId() = R.layout.include_list
 
     override fun initView(savedInstanceState: Bundle?) {
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             requestTreeViewModel.getPlazaData(true)
         }
         //初始化recyclerView
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
-            footView = it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            footView = it.initFooter {
                 requestTreeViewModel.getPlazaData(false)
-            })
+            }
             //初始化FloatingActionButton
             it.initFloatBtn(floatbtn)
         }
@@ -78,13 +76,13 @@ class PlazaFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
                     requestCollectViewModel.collect(item.id)
                 }
             }
-            setOnItemClickListener { _, view, position ->
+            setOnItemClickListener { _, _, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
-                    putParcelable("ariticleData", articleAdapter.data[position])
+                    putParcelable("articleData", articleAdapter.data[position])
                 })
             }
             addChildClickViewIds(R.id.item_home_author, R.id.item_project_author)
-            setOnItemChildClickListener { adapter, view, position ->
+            setOnItemChildClickListener { _, view, position ->
                 when (view.id) {
                     R.id.item_home_author, R.id.item_project_author -> {
                         nav().navigateAction(
@@ -103,16 +101,16 @@ class PlazaFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
 
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         requestTreeViewModel.getPlazaData(true)
     }
 
     override fun createObserver() {
-        requestTreeViewModel.plazaDataState.observe(viewLifecycleOwner, Observer {
+        requestTreeViewModel.plazaDataState.observe(viewLifecycleOwner, {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, articleAdapter, loadsir, recyclerView, swipeRefresh)
+            loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
         })
-        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
+        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 //收藏或取消收藏操作成功，发送全局收藏消息
                 eventViewModel.collectEvent.value = CollectBus(it.id, it.collect)
@@ -129,7 +127,7 @@ class PlazaFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
         })
         appViewModel.run {
             //监听账户信息是否改变 有值时(登录)将相关的数据设置为已收藏，为空时(退出登录)，将已收藏的数据变为未收藏
-            userinfo.observe(viewLifecycleOwner, Observer {
+            userinfo.observe(viewLifecycleOwner, {
                 if (it != null) {
                     it.collectIds.forEach { id ->
                         for (item in articleAdapter.data) {
@@ -147,16 +145,16 @@ class PlazaFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
                 articleAdapter.notifyDataSetChanged()
             })
             //监听全局的主题颜色改变
-            appColor.observe(viewLifecycleOwner, Observer {
-                setUiTheme(it, floatbtn, swipeRefresh, loadsir)
+            appColor.observe(viewLifecycleOwner, {
+                setUiTheme(it, floatbtn, swipeRefresh, loadService)
             })
             //监听全局的列表动画改编
-            appAnimation.observe(viewLifecycleOwner, Observer {
+            appAnimation.observe(viewLifecycleOwner, {
                 articleAdapter.setAdapterAnimation(it)
             })
         }
         //监听全局的收藏信息 收藏的Id跟本列表的数据id匹配则需要更新
-        eventViewModel.collectEvent.observe(viewLifecycleOwner, Observer {
+        eventViewModel.collectEvent.observe(viewLifecycleOwner, {
             for (index in articleAdapter.data.indices) {
                 if (articleAdapter.data[index].id == it.id) {
                     articleAdapter.data[index].collect = it.collect

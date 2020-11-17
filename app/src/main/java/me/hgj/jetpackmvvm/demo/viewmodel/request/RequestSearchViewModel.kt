@@ -5,7 +5,7 @@ import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.demo.app.network.apiService
 import me.hgj.jetpackmvvm.demo.app.util.CacheUtil
 import me.hgj.jetpackmvvm.demo.data.model.bean.ApiPagerResponse
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.SearchResponse
 import me.hgj.jetpackmvvm.ext.launch
 import me.hgj.jetpackmvvm.ext.request
@@ -24,7 +24,7 @@ class RequestSearchViewModel : BaseViewModel() {
     var hotData: MutableLiveData<ResultState<ArrayList<SearchResponse>>> = MutableLiveData()
 
     //搜索结果数据
-    var seachResultData: MutableLiveData<ResultState<ApiPagerResponse<ArrayList<AriticleResponse>>>> =
+    var seachResultData: MutableLiveData<ResultState<ApiPagerResponse<ArrayList<ArticleResponse>>>> =
         MutableLiveData()
 
     //搜索历史词数据

@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.demo.app.network.apiService
 import me.hgj.jetpackmvvm.demo.app.network.stateCallback.ListDataUiState
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.ClassifyResponse
 import me.hgj.jetpackmvvm.demo.data.repository.request.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.ext.request
@@ -22,7 +22,7 @@ class RequestProjectViewModel : BaseViewModel() {
 
     var titleData: MutableLiveData<ResultState<ArrayList<ClassifyResponse>>> = MutableLiveData()
 
-    var projectDataState: MutableLiveData<ListDataUiState<AriticleResponse>> = MutableLiveData()
+    var projectDataState: MutableLiveData<ListDataUiState<ArticleResponse>> = MutableLiveData()
 
     fun getProjectTitleData() {
         request({ apiService.getProjecTitle() }, titleData)
@@ -52,7 +52,7 @@ class RequestProjectViewModel : BaseViewModel() {
                     isSuccess = false,
                     errMessage = it.errorMsg,
                     isRefresh = isRefresh,
-                    listData = arrayListOf<AriticleResponse>()
+                    listData = arrayListOf<ArticleResponse>()
                 )
             projectDataState.value = listDataUiState
         })

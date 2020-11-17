@@ -27,7 +27,7 @@ import me.hgj.jetpackmvvm.ext.navigateAction
 class CollectAriticleFragment : BaseFragment<RequestCollectViewModel, IncludeListBinding>() {
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     private val articleAdapter: CollectAdapter by lazy { CollectAdapter(arrayListOf()) }
 
@@ -35,9 +35,9 @@ class CollectAriticleFragment : BaseFragment<RequestCollectViewModel, IncludeLis
 
     override fun initView(savedInstanceState: Bundle?)  {
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             mViewModel.getCollectAriticleData(true)
         }
         //初始化recyclerView
@@ -71,14 +71,14 @@ class CollectAriticleFragment : BaseFragment<RequestCollectViewModel, IncludeLis
     }
 
     override fun lazyLoadData() {
-        loadsir.showLoading()
+        loadService.showLoading()
         mViewModel.getCollectAriticleData(true)
     }
 
     override fun createObserver() {
         mViewModel.ariticleDataState.observe(viewLifecycleOwner, Observer {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, articleAdapter, loadsir, recyclerView,swipeRefresh)
+            loadListData(it, articleAdapter, loadService, recyclerView,swipeRefresh)
         })
         mViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
             if (it.isSuccess) {
@@ -101,7 +101,7 @@ class CollectAriticleFragment : BaseFragment<RequestCollectViewModel, IncludeLis
                     if (articleAdapter.data[index].originId == it.id) {
                         articleAdapter.remove(index)
                         if (articleAdapter.data.size == 0) {
-                            loadsir.showEmpty()
+                            loadService.showEmpty()
                         }
                         return@Observer
                     }

@@ -2,11 +2,9 @@ package me.hgj.jetpackmvvm.demo.ui.fragment.project
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ConvertUtils
 import com.kingja.loadsir.core.LoadService
-import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import kotlinx.android.synthetic.main.include_list.*
 import kotlinx.android.synthetic.main.include_recyclerview.*
 import me.hgj.jetpackmvvm.demo.R
@@ -16,7 +14,7 @@ import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.DefineLoadMoreView
 import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.SpaceItemDecoration
 import me.hgj.jetpackmvvm.demo.data.model.bean.CollectBus
 import me.hgj.jetpackmvvm.demo.databinding.IncludeListBinding
-import me.hgj.jetpackmvvm.demo.ui.adapter.AriticleAdapter
+import me.hgj.jetpackmvvm.demo.ui.adapter.ArticleAdapter
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestCollectViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestProjectViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.state.ProjectViewModel
@@ -31,10 +29,10 @@ import me.hgj.jetpackmvvm.ext.navigateAction
 class ProjectChildFragment : BaseFragment<ProjectViewModel, IncludeListBinding>() {
 
     //适配器
-    private val articleAdapter: AriticleAdapter by lazy { AriticleAdapter(arrayListOf()) }
+    private val articleAdapter: ArticleAdapter by lazy { ArticleAdapter(arrayListOf()) }
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadservice: LoadService<Any>
 
     //recyclerview的底部加载view 因为在首页要动态改变他的颜色，所以加了他这个字段
     private lateinit var footView: DefineLoadMoreView
@@ -45,7 +43,7 @@ class ProjectChildFragment : BaseFragment<ProjectViewModel, IncludeListBinding>(
     //改项目对应的id
     private var cid = 0
 
-    //收藏viewmodel
+    //收藏viewModel
     private val requestCollectViewModel: RequestCollectViewModel by viewModels()
 
     //请求的ViewModel
@@ -59,19 +57,19 @@ class ProjectChildFragment : BaseFragment<ProjectViewModel, IncludeListBinding>(
             cid = it.getInt("cid")
         }
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadservice = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadservice.showLoading()
             requestProjectViewModel.getProjectData(true, cid, isNew)
         }
         //初始化recyclerView
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
 
-            footView = it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            footView = it.initFooter {
                 //触发加载更多时请求数据
                 requestProjectViewModel.getProjectData(false, cid, isNew)
-            })
+            }
             //初始化FloatingActionButton
             it.initFloatBtn(floatbtn)
         }
@@ -81,20 +79,20 @@ class ProjectChildFragment : BaseFragment<ProjectViewModel, IncludeListBinding>(
             requestProjectViewModel.getProjectData(true, cid, isNew)
         }
         articleAdapter.run {
-            setCollectClick { item, v, position ->
+            setCollectClick { item, v, _ ->
                 if (v.isChecked) {
                     requestCollectViewModel.uncollect(item.id)
                 } else {
                     requestCollectViewModel.collect(item.id)
                 }
             }
-            setOnItemClickListener { adapter, view, position ->
+            setOnItemClickListener { _, _, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
-                    putParcelable("ariticleData", articleAdapter.data[position])
+                    putParcelable("articleData", articleAdapter.data[position])
                 })
             }
             addChildClickViewIds(R.id.item_home_author, R.id.item_project_author)
-            setOnItemChildClickListener { adapter, view, position ->
+            setOnItemChildClickListener { _, view, position ->
                 when (view.id) {
                     R.id.item_home_author, R.id.item_project_author -> {
                         nav().navigateAction(
@@ -109,16 +107,16 @@ class ProjectChildFragment : BaseFragment<ProjectViewModel, IncludeListBinding>(
     }
 
     override fun lazyLoadData() {
-        loadsir.showLoading()
+        loadservice.showLoading()
         requestProjectViewModel.getProjectData(true, cid, isNew)
     }
 
     override fun createObserver() {
-        requestProjectViewModel.projectDataState.observe(viewLifecycleOwner, Observer {
+        requestProjectViewModel.projectDataState.observe(viewLifecycleOwner, {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, articleAdapter, loadsir, recyclerView, swipeRefresh)
+            loadListData(it, articleAdapter, loadservice, recyclerView, swipeRefresh)
         })
-        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
+        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 eventViewModel.collectEvent.value = CollectBus(it.id, it.collect)
             } else {
@@ -134,7 +132,7 @@ class ProjectChildFragment : BaseFragment<ProjectViewModel, IncludeListBinding>(
         })
         appViewModel.run {
             //监听账户信息是否改变 有值时(登录)将相关的数据设置为已收藏，为空时(退出登录)，将已收藏的数据变为未收藏
-            userinfo.observe(viewLifecycleOwner, Observer {
+            userinfo.observe(viewLifecycleOwner, {
                 if (it != null) {
                     it.collectIds.forEach { id ->
                         for (item in articleAdapter.data) {
@@ -152,15 +150,15 @@ class ProjectChildFragment : BaseFragment<ProjectViewModel, IncludeListBinding>(
                 articleAdapter.notifyDataSetChanged()
             })
             //监听全局的主题颜色改变
-            appColor.observe(viewLifecycleOwner, Observer {
-                setUiTheme(it, floatbtn, swipeRefresh, loadsir, footView)
+            appColor.observe(viewLifecycleOwner, {
+                setUiTheme(it, floatbtn, swipeRefresh, loadservice, footView)
             })
             //监听全局的列表动画改编
-            appAnimation.observe(viewLifecycleOwner, Observer {
+            appAnimation.observe(viewLifecycleOwner, {
                 articleAdapter.setAdapterAnimation(it)
             })
             //监听全局的收藏信息 收藏的Id跟本列表的数据id匹配则需要更新
-            eventViewModel.collectEvent.observe(viewLifecycleOwner, Observer {
+            eventViewModel.collectEvent.observe(viewLifecycleOwner, {
                 for (index in articleAdapter.data.indices) {
                     if (articleAdapter.data[index].id == it.id) {
                         articleAdapter.data[index].collect = it.collect

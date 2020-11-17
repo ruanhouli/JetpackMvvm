@@ -31,7 +31,7 @@ class IntegralHistoryFragment : BaseFragment<IntegralViewModel, FragmentListBind
     private val integralAdapter: IntegralHistoryAdapter by lazy { IntegralHistoryAdapter(arrayListOf()) }
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     //请求的ViewModel /** */
     private val requestIntegralViewModel: RequestIntegralViewModel by viewModels()
@@ -43,9 +43,9 @@ class IntegralHistoryFragment : BaseFragment<IntegralViewModel, FragmentListBind
             nav().navigateUp()
         }
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             requestIntegralViewModel.getIntegralHistoryData(true)
         }
         //初始化recyclerView
@@ -67,14 +67,14 @@ class IntegralHistoryFragment : BaseFragment<IntegralViewModel, FragmentListBind
 
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         requestIntegralViewModel.getIntegralHistoryData(true)
     }
 
     override fun createObserver() {
         requestIntegralViewModel.integralHistoryDataState.observe(viewLifecycleOwner, Observer {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, integralAdapter, loadsir, recyclerView,swipeRefresh)
+            loadListData(it, integralAdapter, loadService, recyclerView,swipeRefresh)
         })
     }
 }

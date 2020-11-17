@@ -16,7 +16,7 @@ import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.DefineLoadMoreView
 import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.SpaceItemDecoration
 import me.hgj.jetpackmvvm.demo.data.model.bean.CollectBus
 import me.hgj.jetpackmvvm.demo.databinding.IncludeListBinding
-import me.hgj.jetpackmvvm.demo.ui.adapter.AriticleAdapter
+import me.hgj.jetpackmvvm.demo.ui.adapter.ArticleAdapter
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestCollectViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestTreeViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.state.TreeViewModel
@@ -31,7 +31,7 @@ import me.hgj.jetpackmvvm.ext.navigateAction
 class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     private var cid = -1
 
@@ -39,7 +39,7 @@ class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
     private lateinit var footView: DefineLoadMoreView
 
     //适配器
-    private val articleAdapter: AriticleAdapter by lazy { AriticleAdapter(arrayListOf()) }
+    private val articleAdapter: ArticleAdapter by lazy { ArticleAdapter(arrayListOf()) }
 
     //收藏viewmodel
     private val requestCollectViewModel: RequestCollectViewModel by viewModels()
@@ -54,9 +54,9 @@ class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
             cid = it.getInt("cid")
         }
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             requestTreeViewModel.getSystemChildData(true, cid)
         }
         //初始化recyclerView
@@ -83,7 +83,7 @@ class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
             }
             setOnItemClickListener { adapter, view, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
-                    putParcelable("ariticleData", articleAdapter.data[position])
+                    putParcelable("articleData", articleAdapter.data[position])
                 })
             }
             addChildClickViewIds(R.id.item_home_author, R.id.item_project_author)
@@ -103,14 +103,14 @@ class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
 
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         requestTreeViewModel.getSystemChildData(true, cid)
     }
 
     override fun createObserver() {
         requestTreeViewModel.systemChildDataState.observe(viewLifecycleOwner, Observer {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, articleAdapter, loadsir, recyclerView, swipeRefresh)
+            loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
         })
 
         requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {

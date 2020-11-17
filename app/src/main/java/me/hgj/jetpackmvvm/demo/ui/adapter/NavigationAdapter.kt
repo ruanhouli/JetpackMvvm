@@ -10,15 +10,15 @@ import com.google.android.flexbox.JustifyContent
 import me.hgj.jetpackmvvm.demo.R
 import me.hgj.jetpackmvvm.demo.app.ext.setAdapterAnimation
 import me.hgj.jetpackmvvm.demo.app.util.SettingUtil
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.NavigationResponse
 import me.hgj.jetpackmvvm.ext.util.toHtml
 
 class NavigationAdapter(data: ArrayList<NavigationResponse>) :
     BaseQuickAdapter<NavigationResponse, BaseViewHolder>(R.layout.item_system, data) {
 
-    private var navigationAction: (item: AriticleResponse, view: View) -> Unit =
-        { _: AriticleResponse, _: View -> }
+    private var navigationAction: (item: ArticleResponse, view: View) -> Unit =
+        { _: ArticleResponse, _: View -> }
 
 
     init {
@@ -47,7 +47,7 @@ class NavigationAdapter(data: ArrayList<NavigationResponse>) :
         }
     }
 
-    fun setNavigationAction(inputNavigationAction: (item: AriticleResponse, view: View) -> Unit) {
+    fun setNavigationAction(inputNavigationAction: (item: ArticleResponse, view: View) -> Unit) {
         this.navigationAction = inputNavigationAction
     }
 }

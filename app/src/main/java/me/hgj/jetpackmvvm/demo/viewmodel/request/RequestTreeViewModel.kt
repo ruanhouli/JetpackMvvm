@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.demo.app.network.apiService
 import me.hgj.jetpackmvvm.demo.app.network.stateCallback.ListDataUiState
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.NavigationResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.SystemResponse
 import me.hgj.jetpackmvvm.ext.request
@@ -20,13 +20,13 @@ class RequestTreeViewModel : BaseViewModel() {
     private var pageNo = 0
 
     //广场数据
-    var plazaDataState: MutableLiveData<ListDataUiState<AriticleResponse>> = MutableLiveData()
+    var plazaDataState: MutableLiveData<ListDataUiState<ArticleResponse>> = MutableLiveData()
 
     //每日一问数据
-    var askDataState: MutableLiveData<ListDataUiState<AriticleResponse>> = MutableLiveData()
+    var askDataState: MutableLiveData<ListDataUiState<ArticleResponse>> = MutableLiveData()
 
     //体系子栏目列表数据
-    var systemChildDataState: MutableLiveData<ListDataUiState<AriticleResponse>> = MutableLiveData()
+    var systemChildDataState: MutableLiveData<ListDataUiState<ArticleResponse>> = MutableLiveData()
 
     //体系数据
     var systemDataState: MutableLiveData<ListDataUiState<SystemResponse>> = MutableLiveData()
@@ -62,7 +62,7 @@ class RequestTreeViewModel : BaseViewModel() {
                     isSuccess = false,
                     errMessage = it.errorMsg,
                     isRefresh = isRefresh,
-                    listData = arrayListOf<AriticleResponse>()
+                    listData = arrayListOf<ArticleResponse>()
                 )
             plazaDataState.value = listDataUiState
         })
@@ -95,7 +95,7 @@ class RequestTreeViewModel : BaseViewModel() {
                     isSuccess = false,
                     errMessage = it.errorMsg,
                     isRefresh = isRefresh,
-                    listData = arrayListOf<AriticleResponse>()
+                    listData = arrayListOf<ArticleResponse>()
                 )
             askDataState.value = listDataUiState
         })
@@ -176,7 +176,7 @@ class RequestTreeViewModel : BaseViewModel() {
                     isSuccess = false,
                     errMessage = it.errorMsg,
                     isRefresh = isRefresh,
-                    listData = arrayListOf<AriticleResponse>()
+                    listData = arrayListOf<ArticleResponse>()
                 )
             plazaDataState.value = listDataUiState
         })

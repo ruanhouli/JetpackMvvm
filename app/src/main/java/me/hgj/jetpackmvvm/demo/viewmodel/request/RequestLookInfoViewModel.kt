@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.demo.app.network.apiService
 import me.hgj.jetpackmvvm.demo.app.network.stateCallback.ListDataUiState
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.ShareResponse
 import me.hgj.jetpackmvvm.ext.request
 
@@ -17,7 +17,7 @@ class RequestLookInfoViewModel : BaseViewModel() {
 
     var pageNo = 1
 
-    var shareListDataUistate = MutableLiveData<ListDataUiState<AriticleResponse>>()
+    var shareListDataUistate = MutableLiveData<ListDataUiState<ArticleResponse>>()
 
     var shareResponse = MutableLiveData<ShareResponse>()
 
@@ -46,7 +46,7 @@ class RequestLookInfoViewModel : BaseViewModel() {
                     isSuccess = false,
                     errMessage = it.errorMsg,
                     isRefresh = isRefresh,
-                    listData = arrayListOf<AriticleResponse>()
+                    listData = arrayListOf<ArticleResponse>()
                 )
             shareListDataUistate.value = listDataUiState
         })

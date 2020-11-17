@@ -25,7 +25,7 @@ import me.hgj.jetpackmvvm.ext.navigateAction
 class CollectUrlFragment : BaseFragment<RequestCollectViewModel, IncludeListBinding>() {
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     private val articleAdapter: CollectUrlAdapter by lazy { CollectUrlAdapter(arrayListOf()) }
 
@@ -33,9 +33,9 @@ class CollectUrlFragment : BaseFragment<RequestCollectViewModel, IncludeListBind
 
     override fun initView(savedInstanceState: Bundle?) {
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             mViewModel.getCollectUrlData()
 
         }
@@ -68,7 +68,7 @@ class CollectUrlFragment : BaseFragment<RequestCollectViewModel, IncludeListBind
 
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         mViewModel.getCollectUrlData()
     }
 
@@ -81,16 +81,16 @@ class CollectUrlFragment : BaseFragment<RequestCollectViewModel, IncludeListBind
                 when {
                     //第一页并没有数据 显示空布局界面
                     it.isEmpty -> {
-                        loadsir.showEmpty()
+                        loadService.showEmpty()
                     }
                     else -> {
-                        loadsir.showSuccess()
+                        loadService.showSuccess()
                         articleAdapter.setList(it.listData)
                     }
                 }
             } else {
                 //失败
-                loadsir.showError(it.errMessage)
+                loadService.showError(it.errMessage)
             }
         })
         mViewModel.collectUrlUiState.observe(viewLifecycleOwner, Observer {
@@ -99,7 +99,7 @@ class CollectUrlFragment : BaseFragment<RequestCollectViewModel, IncludeListBind
                     if (articleAdapter.data[index].id == it.id) {
                         articleAdapter.remove(index)
                         if (articleAdapter.data.size == 0) {
-                            loadsir.showEmpty()
+                            loadService.showEmpty()
                         }
                         return@Observer
                     }
@@ -122,7 +122,7 @@ class CollectUrlFragment : BaseFragment<RequestCollectViewModel, IncludeListBind
                         articleAdapter.data.removeAt(index)
                         articleAdapter.notifyItemChanged(index)
                         if (articleAdapter.data.size == 0) {
-                            loadsir.showEmpty()
+                            loadService.showEmpty()
                         }
                         return@Observer
                     }

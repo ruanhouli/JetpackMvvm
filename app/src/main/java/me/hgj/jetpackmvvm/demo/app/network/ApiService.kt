@@ -1,8 +1,6 @@
 package me.hgj.jetpackmvvm.demo.app.network
 
 import me.hgj.jetpackmvvm.demo.data.model.bean.*
-import okhttp3.ResponseBody
-import retrofit2.Response
 import retrofit2.http.*
 
 /**
@@ -48,13 +46,13 @@ interface ApiService {
      * 获取置顶文章集合数据
      */
     @GET("article/top/json")
-    suspend fun getTopAritrilList(): ApiResponse<ArrayList<AriticleResponse>>
+    suspend fun getTopAritrilList(): ApiResponse<ArrayList<ArticleResponse>>
 
     /**
      * 获取首页文章数据
      */
     @GET("article/list/{page}/json")
-    suspend fun getAritrilList(@Path("page") pageNo: Int): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>>
+    suspend fun getAritrilList(@Path("page") pageNo: Int): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>>
 
     /**
      * 项目分类标题
@@ -69,13 +67,13 @@ interface ApiService {
     suspend fun getProjecDataByType(
         @Path("page") pageNo: Int,
         @Query("cid") cid: Int
-    ): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>>
+    ): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>>
 
     /**
      * 获取最新项目数据
      */
     @GET("article/listproject/{page}/json")
-    suspend fun getProjecNewData(@Path("page") pageNo: Int): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>>
+    suspend fun getProjecNewData(@Path("page") pageNo: Int): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>>
 
     /**
      * 公众号分类
@@ -90,7 +88,7 @@ interface ApiService {
     suspend fun getPublicData(
         @Path("page") pageNo: Int,
         @Path("id") id: Int
-    ): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>>
+    ): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>>
 
     /**
      * 获取热门搜索数据
@@ -105,19 +103,19 @@ interface ApiService {
     suspend fun getSearchDataByKey(
         @Path("page") pageNo: Int,
         @Query("k") searchKey: String
-    ): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>>
+    ): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>>
 
     /**
      * 广场列表数据
      */
     @GET("user_article/list/{page}/json")
-    suspend fun getSquareData(@Path("page") page: Int): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>>
+    suspend fun getSquareData(@Path("page") page: Int): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>>
 
     /**
      * 每日一问列表数据
      */
     @GET("wenda/list/{page}/json")
-    suspend fun getAskData(@Path("page") page: Int): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>>
+    suspend fun getAskData(@Path("page") page: Int): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>>
 
     /**
      * 获取体系数据
@@ -132,7 +130,7 @@ interface ApiService {
     suspend fun getSystemChildData(
         @Path("page") pageNo: Int,
         @Query("cid") cid: Int
-    ): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>>
+    ): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>>
 
     /**
      * 获取导航数据

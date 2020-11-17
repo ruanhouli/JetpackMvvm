@@ -2,7 +2,6 @@ package me.hgj.jetpackmvvm.demo.ui.fragment.tree
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ConvertUtils
 import com.kingja.loadsir.core.LoadService
@@ -27,7 +26,7 @@ import me.hgj.jetpackmvvm.ext.navigateAction
 class NavigationFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     override fun layoutId() = R.layout.include_list
 
@@ -38,9 +37,9 @@ class NavigationFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             requestTreeViewModel.getNavigationData()
         }
         //初始化recyclerView
@@ -53,10 +52,10 @@ class NavigationFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
             //触发刷新监听时请求数据
             requestTreeViewModel.getNavigationData()
         }
-        navigationAdapter.setNavigationAction { item, view ->
+        navigationAdapter.setNavigationAction { item, _ ->
             nav().navigateAction(R.id.action_to_webFragment,
                 Bundle().apply {
-                    putParcelable("ariticleData", item)
+                    putParcelable("articleData", item)
                 }
             )
         }
@@ -64,27 +63,27 @@ class NavigationFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
 
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         requestTreeViewModel.getNavigationData()
     }
 
     override fun createObserver() {
-        requestTreeViewModel.navigationDataState.observe(viewLifecycleOwner, Observer {
+        requestTreeViewModel.navigationDataState.observe(viewLifecycleOwner, {
             swipeRefresh.isRefreshing = false
             if (it.isSuccess) {
-                loadsir.showSuccess()
+                loadService.showSuccess()
                 navigationAdapter.setList(it.listData)
             } else {
-                loadsir.showError(it.errMessage)
+                loadService.showError(it.errMessage)
             }
         })
         appViewModel.run {
             //监听全局的主题颜色改变
-            appColor.observe(viewLifecycleOwner, Observer {
-                setUiTheme(it, floatbtn, swipeRefresh, loadsir)
+            appColor.observe(viewLifecycleOwner, {
+                setUiTheme(it, floatbtn, swipeRefresh, loadService)
             })
             //监听全局的列表动画改编
-            appAnimation.observe(viewLifecycleOwner, Observer {
+            appAnimation.observe(viewLifecycleOwner, {
                 navigationAdapter.setAdapterAnimation(it)
             })
         }

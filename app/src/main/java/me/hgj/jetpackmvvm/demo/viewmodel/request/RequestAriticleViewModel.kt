@@ -5,7 +5,7 @@ import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.demo.app.network.apiService
 import me.hgj.jetpackmvvm.demo.app.network.stateCallback.ListDataUiState
 import me.hgj.jetpackmvvm.demo.app.network.stateCallback.UpdateUiState
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 import me.hgj.jetpackmvvm.ext.request
 import me.hgj.jetpackmvvm.state.ResultState
 
@@ -21,7 +21,7 @@ class RequestAriticleViewModel : BaseViewModel() {
     var addData = MutableLiveData<ResultState<Any?>>()
 
     //分享的列表集合数据
-    var shareDataState = MutableLiveData<ListDataUiState<AriticleResponse>>()
+    var shareDataState = MutableLiveData<ListDataUiState<ArticleResponse>>()
 
     //删除分享文章回调数据
     var delDataState = MutableLiveData<UpdateUiState<Int>>()
@@ -59,7 +59,7 @@ class RequestAriticleViewModel : BaseViewModel() {
                     isSuccess = false,
                     errMessage = it.errorMsg,
                     isRefresh = isRefresh,
-                    listData = arrayListOf<AriticleResponse>()
+                    listData = arrayListOf<ArticleResponse>()
                 )
             shareDataState.value = listDataUiState
         })

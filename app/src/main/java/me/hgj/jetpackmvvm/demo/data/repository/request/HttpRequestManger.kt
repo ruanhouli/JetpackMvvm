@@ -3,13 +3,11 @@ package me.hgj.jetpackmvvm.demo.data.repository.request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import me.hgj.jetpackmvvm.demo.app.network.ApiService
-import me.hgj.jetpackmvvm.demo.app.network.NetworkApi
 import me.hgj.jetpackmvvm.demo.app.network.apiService
 import me.hgj.jetpackmvvm.demo.app.util.CacheUtil
 import me.hgj.jetpackmvvm.demo.data.model.bean.ApiPagerResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.ApiResponse
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.UserInfo
 import me.hgj.jetpackmvvm.network.AppException
 
@@ -27,7 +25,7 @@ class HttpRequestManger {
     /**
      * 获取首页文章数据
      */
-    suspend fun getHomeData(pageNo: Int): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>> {
+    suspend fun getHomeData(pageNo: Int): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>> {
         //同时异步请求2个接口，请求完成后合并数据
         return withContext(Dispatchers.IO) {
             val data = async { apiService.getAritrilList(pageNo) }
@@ -63,7 +61,7 @@ class HttpRequestManger {
         pageNo: Int,
         cid: Int = 0,
         isNew: Boolean = false
-    ): ApiResponse<ApiPagerResponse<ArrayList<AriticleResponse>>> {
+    ): ApiResponse<ApiPagerResponse<ArrayList<ArticleResponse>>> {
         return if (isNew) {
             apiService.getProjecNewData(pageNo)
         } else {

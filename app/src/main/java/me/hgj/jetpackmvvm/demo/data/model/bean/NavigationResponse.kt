@@ -11,6 +11,6 @@ import kotlinx.android.parcel.Parcelize
  */
 @SuppressLint("ParcelCreator")
 @Parcelize
-data class NavigationResponse(var articles: ArrayList<AriticleResponse>,
+data class NavigationResponse(var articles: ArrayList<ArticleResponse>,
                               var cid: Int,
                               var name: String) : Parcelable

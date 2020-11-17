@@ -4,11 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ConvertUtils
 import com.kingja.loadsir.core.LoadService
-import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import com.zhpan.bannerview.BannerViewPager
 import kotlinx.android.synthetic.main.include_list.*
 import kotlinx.android.synthetic.main.include_recyclerview.*
@@ -23,7 +21,7 @@ import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.SpaceItemDecoration
 import me.hgj.jetpackmvvm.demo.data.model.bean.BannerResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.CollectBus
 import me.hgj.jetpackmvvm.demo.databinding.FragmentHomeBinding
-import me.hgj.jetpackmvvm.demo.ui.adapter.AriticleAdapter
+import me.hgj.jetpackmvvm.demo.ui.adapter.ArticleAdapter
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestCollectViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestHomeViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.state.HomeViewModel
@@ -39,7 +37,7 @@ import me.hgj.jetpackmvvm.ext.parseState
 class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
 
     //适配器
-    private val articleAdapter: AriticleAdapter by lazy { AriticleAdapter(arrayListOf(), true) }
+    private val articleAdapter: ArticleAdapter by lazy { ArticleAdapter(arrayListOf(), true) }
 
     //界面状态管理者
     private lateinit var loadService: LoadService<Any>
@@ -80,9 +78,9 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             //因为首页要添加轮播图，所以我设置了firstNeedTop字段为false,即第一条数据不需要设置间距
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f), false))
-            footView = it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            footView = it.initFooter {
                 requestHomeViewModel.getHomeData(false)
-            })
+            }
             //初始化FloatingActionButton
             it.initFloatBtn(floatbtn)
         }
@@ -102,7 +100,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
             setOnItemClickListener { _, _, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
                     putParcelable(
-                        "ariticleData",
+                        "articleData",
                         articleAdapter.data[position - this@HomeFragment.recyclerView.headerCount]
                     )
                 })
@@ -141,21 +139,32 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
     override fun createObserver() {
         requestHomeViewModel.run {
             //监听首页文章列表请求的数据变化
-            homeDataState.observe(viewLifecycleOwner, Observer {
+            homeDataState.observe(viewLifecycleOwner, {
                 //设值 新写了个拓展函数，搞死了这个恶心的重复代码
                 loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
             })
             //监听轮播图请求的数据变化
-            bannerData.observe(viewLifecycleOwner, Observer { resultState ->
+            bannerData.observe(viewLifecycleOwner, { resultState ->
                 parseState(resultState, { data ->
-                    //请求轮播图数据成功，添加轮播图到headview ，如果等于0说明没有添加过头部，添加一个
+                    //请求轮播图数据成功，添加轮播图到headView ，如果等于0说明没有添加过头部，添加一个
                     if (recyclerView.headerCount == 0) {
-                        val headerView = LayoutInflater.from(context).inflate(R.layout.include_banner, null).apply {
-                                    findViewById<BannerViewPager<BannerResponse, HomeBannerViewHolder>>(R.id.banner_view).apply {
+                        val headerView =
+                            LayoutInflater.from(context).inflate(R.layout.include_banner, null)
+                                .apply {
+                                    findViewById<BannerViewPager<BannerResponse, HomeBannerViewHolder>>(
+                                        R.id.banner_view
+                                    ).apply {
                                         adapter = HomeBannerAdapter()
                                         setLifecycleRegistry(lifecycle)
                                         setOnPageClickListener {
-                                            nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {putParcelable("bannerData", data[it])})
+                                            nav().navigateAction(
+                                                R.id.action_to_webFragment,
+                                                Bundle().apply {
+                                                    putParcelable(
+                                                        "bannerData",
+                                                        data[it]
+                                                    )
+                                                })
                                         }
                                         create(data)
                                     }
@@ -165,7 +174,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 })
             })
         }
-        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
+        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 //收藏或取消收藏操作成功，发送全局收藏消息
                 eventViewModel.collectEvent.value = CollectBus(it.id, it.collect)
@@ -182,7 +191,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
         })
         appViewModel.run {
             //监听账户信息是否改变 有值时(登录)将相关的数据设置为已收藏，为空时(退出登录)，将已收藏的数据变为未收藏
-            userinfo.observe(viewLifecycleOwner, Observer {
+            userinfo.observe(viewLifecycleOwner, {
                 if (it != null) {
                     it.collectIds.forEach { id ->
                         for (item in articleAdapter.data) {
@@ -200,15 +209,15 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding>() {
                 articleAdapter.notifyDataSetChanged()
             })
             //监听全局的主题颜色改变
-            appColor.observe(viewLifecycleOwner, Observer {
+            appColor.observe(viewLifecycleOwner, {
                 setUiTheme(it, toolbar, floatbtn, swipeRefresh, loadService, footView)
             })
             //监听全局的列表动画改编
-            appAnimation.observe(viewLifecycleOwner, Observer {
+            appAnimation.observe(viewLifecycleOwner, {
                 articleAdapter.setAdapterAnimation(it)
             })
             //监听全局的收藏信息 收藏的Id跟本列表的数据id匹配则需要更新
-            eventViewModel.collectEvent.observe(viewLifecycleOwner, Observer {
+            eventViewModel.collectEvent.observe(viewLifecycleOwner, {
                 for (index in articleAdapter.data.indices) {
                     if (articleAdapter.data[index].id == it.id) {
                         articleAdapter.data[index].collect = it.collect

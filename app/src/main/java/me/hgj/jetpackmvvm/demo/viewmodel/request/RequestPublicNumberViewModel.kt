@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
 import me.hgj.jetpackmvvm.demo.app.network.apiService
 import me.hgj.jetpackmvvm.demo.app.network.stateCallback.ListDataUiState
-import me.hgj.jetpackmvvm.demo.data.model.bean.AriticleResponse
+import me.hgj.jetpackmvvm.demo.data.model.bean.ArticleResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.ClassifyResponse
 import me.hgj.jetpackmvvm.ext.request
 import me.hgj.jetpackmvvm.state.ResultState
@@ -20,7 +20,7 @@ class RequestPublicNumberViewModel : BaseViewModel() {
 
     var titleData: MutableLiveData<ResultState<ArrayList<ClassifyResponse>>> = MutableLiveData()
 
-    var publicDataState: MutableLiveData<ListDataUiState<AriticleResponse>> = MutableLiveData()
+    var publicDataState: MutableLiveData<ListDataUiState<ArticleResponse>> = MutableLiveData()
 
 
     fun getPublicTitleData() {
@@ -51,7 +51,7 @@ class RequestPublicNumberViewModel : BaseViewModel() {
                     isSuccess = false,
                     errMessage = it.errorMsg,
                     isRefresh = isRefresh,
-                    listData = arrayListOf<AriticleResponse>()
+                    listData = arrayListOf<ArticleResponse>()
                 )
             publicDataState.value = listDataUiState
         })

@@ -65,9 +65,9 @@
                 android:background="@drawable/title_lable_shap1"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
+                android:text="问答"
                 android:textColor="@android:color/holo_green_dark"
-                android:textSize="10dp"
-                android:text="问答" />
+                android:textSize="10dp" />
 
             <View
                 android:layout_width="0dp"

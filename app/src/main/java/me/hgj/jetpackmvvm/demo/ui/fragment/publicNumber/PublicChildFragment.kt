@@ -16,7 +16,7 @@ import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.DefineLoadMoreView
 import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.SpaceItemDecoration
 import me.hgj.jetpackmvvm.demo.data.model.bean.CollectBus
 import me.hgj.jetpackmvvm.demo.databinding.IncludeListBinding
-import me.hgj.jetpackmvvm.demo.ui.adapter.AriticleAdapter
+import me.hgj.jetpackmvvm.demo.ui.adapter.ArticleAdapter
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestCollectViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestPublicNumberViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.state.PublicNumberViewModel
@@ -31,10 +31,10 @@ import me.hgj.jetpackmvvm.ext.navigateAction
 class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBinding>() {
 
     //适配器
-    private val articleAdapter: AriticleAdapter by lazy { AriticleAdapter(arrayListOf()) }
+    private val articleAdapter: ArticleAdapter by lazy { ArticleAdapter(arrayListOf()) }
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     //recyclerview的底部加载view 因为在首页要动态改变他的颜色，所以加了他这个字段
     private lateinit var footView: DefineLoadMoreView
@@ -55,9 +55,9 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
             cid = it.getInt("cid")
         }
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             requestPublicNumberViewModel.getPublicData(true, cid)
         }
         //初始化recyclerView
@@ -87,7 +87,7 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
             }
             setOnItemClickListener { _, view, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
-                    putParcelable("ariticleData", articleAdapter.data[position])
+                    putParcelable("articleData", articleAdapter.data[position])
                 })
             }
             addChildClickViewIds(R.id.item_home_author, R.id.item_project_author)
@@ -106,14 +106,14 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
     }
 
     override fun lazyLoadData() {
-        loadsir.showLoading()
+        loadService.showLoading()
         requestPublicNumberViewModel.getPublicData(true, cid)
     }
 
     override fun createObserver() {
         requestPublicNumberViewModel.publicDataState.observe(viewLifecycleOwner, Observer {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, articleAdapter, loadsir, recyclerView, swipeRefresh)
+            loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
         })
         requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
             if (it.isSuccess) {
@@ -151,7 +151,7 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
             })
             //监听全局的主题颜色改变
             appColor.observe(viewLifecycleOwner, Observer {
-                setUiTheme(it, floatbtn, swipeRefresh, loadsir, footView)
+                setUiTheme(it, floatbtn, swipeRefresh, loadService, footView)
             })
             //监听全局的列表动画改编
             appAnimation.observe(viewLifecycleOwner, Observer {

@@ -8,5 +8,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ShareResponse(
     var coinInfo: CoinInfoResponse,
-    var shareArticles: ApiPagerResponse<ArrayList<AriticleResponse>>
+    var shareArticles: ApiPagerResponse<ArrayList<ArticleResponse>>
 ) : Parcelable

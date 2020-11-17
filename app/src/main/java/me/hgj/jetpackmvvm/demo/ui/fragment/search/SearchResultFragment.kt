@@ -17,7 +17,7 @@ import me.hgj.jetpackmvvm.demo.app.weight.loadCallBack.ErrorCallback
 import me.hgj.jetpackmvvm.demo.app.weight.recyclerview.SpaceItemDecoration
 import me.hgj.jetpackmvvm.demo.data.model.bean.CollectBus
 import me.hgj.jetpackmvvm.demo.databinding.FragmentListBinding
-import me.hgj.jetpackmvvm.demo.ui.adapter.AriticleAdapter
+import me.hgj.jetpackmvvm.demo.ui.adapter.ArticleAdapter
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestCollectViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestSearchViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.state.SearchViewModel
@@ -35,10 +35,10 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
     private var searchKey = ""
 
     //适配器
-    private val articleAdapter: AriticleAdapter by lazy { AriticleAdapter(arrayListOf(), true) }
+    private val articleAdapter: ArticleAdapter by lazy { ArticleAdapter(arrayListOf(), true) }
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     //收藏viewmodel
     private val requestCollectViewModel: RequestCollectViewModel by viewModels()
@@ -55,9 +55,9 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
             nav().navigateUp()
         }
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             requestSearchViewModel.getSearchResultData(searchKey, true)
         }
 
@@ -87,7 +87,7 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
             }
             setOnItemClickListener { adapter, view, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
-                    putParcelable("ariticleData", articleAdapter.data[position])
+                    putParcelable("articleData", articleAdapter.data[position])
                 })
             }
             addChildClickViewIds(R.id.item_home_author, R.id.item_project_author)
@@ -108,7 +108,7 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
 
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         requestSearchViewModel.getSearchResultData(searchKey, true)
     }
 
@@ -120,14 +120,14 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
                 requestSearchViewModel.pageNo++
                 if (it.isRefresh() && it.datas.size == 0) {
                     //如果是第一页，并且没有数据，页面提示空布局
-                    loadsir.showEmpty()
+                    loadService.showEmpty()
                 } else if (it.isRefresh()) {
                     //如果是刷新的，有数据
-                    loadsir.showSuccess()
+                    loadService.showSuccess()
                     articleAdapter.setList(it.datas)
                 } else {
                     //不是第一页
-                    loadsir.showSuccess()
+                    loadService.showSuccess()
                     articleAdapter.addData(it.datas)
                 }
                 recyclerView.loadMoreFinish(it.isEmpty(), it.hasMore())
@@ -136,8 +136,8 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
                 swipeRefresh.isRefreshing = false
                 if (articleAdapter.data.size == 0) {
                     //如果适配器数据没有值，则显示错误界面，并提示错误信息
-                    loadsir.setErrorText(it.errorMsg)
-                    loadsir.showCallback(ErrorCallback::class.java)
+                    loadService.setErrorText(it.errorMsg)
+                    loadService.showCallback(ErrorCallback::class.java)
                 } else {
                     recyclerView.loadMoreError(0, it.errorMsg)
                 }

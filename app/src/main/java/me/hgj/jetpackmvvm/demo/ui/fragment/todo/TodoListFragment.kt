@@ -38,7 +38,7 @@ class TodoListFragment : BaseFragment<TodoViewModel, FragmentListBinding>() {
     private val articleAdapter: TodoAdapter by lazy { TodoAdapter(arrayListOf()) }
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     //请求数据ViewModel
     private val requestViewModel: RequestTodoViewModel by viewModels()
@@ -61,9 +61,9 @@ class TodoListFragment : BaseFragment<TodoViewModel, FragmentListBinding>() {
             }
         }
         //状态页配置 swipeRefresh参数表示你要包裹的布局
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击错误重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             //请求数据
             requestViewModel.getTodoData(true)
         }
@@ -142,19 +142,19 @@ class TodoListFragment : BaseFragment<TodoViewModel, FragmentListBinding>() {
 
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         requestViewModel.getTodoData(true)
     }
 
     override fun createObserver() {
         requestViewModel.todoDataState.observe(viewLifecycleOwner, Observer {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, articleAdapter, loadsir, recyclerView,swipeRefresh)
+            loadListData(it, articleAdapter, loadService, recyclerView,swipeRefresh)
         })
         requestViewModel.delDataState.observe(viewLifecycleOwner, Observer {
             if (it.isSuccess) {
                 if (articleAdapter.data.size == 1) {
-                    loadsir.showEmpty()
+                    loadService.showEmpty()
                 }
                 articleAdapter.remove(it.data!!)
             } else {
@@ -173,7 +173,7 @@ class TodoListFragment : BaseFragment<TodoViewModel, FragmentListBinding>() {
         eventViewModel.todoEvent.observe(viewLifecycleOwner, Observer {
             if (articleAdapter.data.size == 0) {
                 //界面没有数据时，变为加载中 增强一丢丢体验
-                loadsir.showLoading()
+                loadService.showLoading()
             } else {
                 //有数据时，swipeRefresh 显示刷新状态
                 swipeRefresh.isRefreshing = true

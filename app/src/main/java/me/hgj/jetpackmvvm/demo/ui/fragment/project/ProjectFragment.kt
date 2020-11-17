@@ -3,7 +3,6 @@ package me.hgj.jetpackmvvm.demo.ui.fragment.project
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.kingja.loadsir.core.LoadService
 import kotlinx.android.synthetic.main.include_viewpager.*
 import me.hgj.jetpackmvvm.demo.R
@@ -24,7 +23,7 @@ import me.hgj.jetpackmvvm.ext.parseState
 class ProjectFragment : BaseFragment<ProjectViewModel, FragmentViewpagerBinding>() {
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     //fragment集合
     var fragments: ArrayList<Fragment> = arrayListOf()
@@ -39,16 +38,16 @@ class ProjectFragment : BaseFragment<ProjectViewModel, FragmentViewpagerBinding>
 
     override fun initView(savedInstanceState: Bundle?) {
         //状态页配置
-        loadsir = loadServiceInit(view_pager) {
+        loadService = loadServiceInit(view_pager) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             requestProjectViewModel.getProjectTitleData()
         }
         //初始化viewpager2
         view_pager.init(this, fragments)
         //初始化 magic_indicator
         magic_indicator.bindViewPager2(view_pager, mDataList)
-        appViewModel.appColor.value?.let { setUiTheme(it, viewpager_linear, loadsir) }
+        appViewModel.appColor.value?.let { setUiTheme(it, viewpager_linear, loadService) }
     }
 
     /**
@@ -56,13 +55,13 @@ class ProjectFragment : BaseFragment<ProjectViewModel, FragmentViewpagerBinding>
      */
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         //请求标题数据
         requestProjectViewModel.getProjectTitleData()
     }
 
     override fun createObserver() {
-        requestProjectViewModel.titleData.observe(viewLifecycleOwner, Observer { data ->
+        requestProjectViewModel.titleData.observe(viewLifecycleOwner, { data ->
             parseState(data, {
                 mDataList.clear()
                 fragments.clear()
@@ -78,15 +77,15 @@ class ProjectFragment : BaseFragment<ProjectViewModel, FragmentViewpagerBinding>
                 magic_indicator.navigator.notifyDataSetChanged()
                 view_pager.adapter?.notifyDataSetChanged()
                 view_pager.offscreenPageLimit = fragments.size
-                loadsir.showSuccess()
+                loadService.showSuccess()
             }, {
                 //请求项目标题失败
-                loadsir.showCallback(ErrorCallback::class.java)
-                loadsir.setErrorText(it.errorMsg)
+                loadService.showCallback(ErrorCallback::class.java)
+                loadService.setErrorText(it.errorMsg)
             })
         })
-        appViewModel.appColor.observe(viewLifecycleOwner, Observer {
-            setUiTheme(it, viewpager_linear, loadsir)
+        appViewModel.appColor.observe(viewLifecycleOwner, {
+            setUiTheme(it, viewpager_linear, loadService)
         })
     }
 }

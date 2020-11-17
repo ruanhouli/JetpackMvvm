@@ -32,7 +32,7 @@ class AriticleFragment : BaseFragment<AriticleViewModel, FragmentListBinding>() 
     private val articleAdapter: ShareAdapter by lazy { ShareAdapter(arrayListOf()) }
 
     //界面状态管理者
-    private lateinit var loadsir: LoadService<Any>
+    private lateinit var loadService: LoadService<Any>
 
     //记得要写泛型，虽然在 by lazy中 提示不用写，但是你不写就会报错
     private val requestViewModel: RequestAriticleViewModel by viewModels()
@@ -55,9 +55,9 @@ class AriticleFragment : BaseFragment<AriticleViewModel, FragmentListBinding>() 
             }
         }
         //状态页配置
-        loadsir = loadServiceInit(swipeRefresh) {
+        loadService = loadServiceInit(swipeRefresh) {
             //点击重试时触发的操作
-            loadsir.showLoading()
+            loadService.showLoading()
             requestViewModel.getShareData(true)
         }
 
@@ -80,7 +80,7 @@ class AriticleFragment : BaseFragment<AriticleViewModel, FragmentListBinding>() 
         articleAdapter.run {
             setOnItemClickListener { adapter, view, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
-                    putParcelable("ariticleData", articleAdapter.data[position])
+                    putParcelable("articleData", articleAdapter.data[position])
                 })
             }
             addChildClickViewIds(R.id.item_share_del)
@@ -101,20 +101,20 @@ class AriticleFragment : BaseFragment<AriticleViewModel, FragmentListBinding>() 
 
     override fun lazyLoadData() {
         //设置界面 加载中
-        loadsir.showLoading()
+        loadService.showLoading()
         requestViewModel.getShareData(true)
     }
 
     override fun createObserver() {
         requestViewModel.shareDataState.observe(viewLifecycleOwner, Observer {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, articleAdapter, loadsir, recyclerView,swipeRefresh)
+            loadListData(it, articleAdapter, loadService, recyclerView,swipeRefresh)
         })
         requestViewModel.delDataState.observe(viewLifecycleOwner, Observer {
             if (it.isSuccess) {
                 //删除成功 如果是删除的最后一个了，那么直接把界面设置为空布局
                 if (articleAdapter.data.size == 1) {
-                    loadsir.showEmpty()
+                    loadService.showEmpty()
                 }
                 articleAdapter.remove(it.data!!)
             } else {
@@ -125,7 +125,7 @@ class AriticleFragment : BaseFragment<AriticleViewModel, FragmentListBinding>() 
         eventViewModel.shareArticleEvent.observe(viewLifecycleOwner, Observer {
             if (articleAdapter.data.size == 0) {
                 //界面没有数据时，变为加载中 增强一丢丢体验
-                loadsir.showLoading()
+                loadService.showLoading()
             } else {
                 //有数据时，swipeRefresh 显示刷新状态
                 swipeRefresh.isRefreshing = true

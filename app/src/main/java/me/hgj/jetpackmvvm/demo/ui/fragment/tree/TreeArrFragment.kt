@@ -2,7 +2,6 @@ package me.hgj.jetpackmvvm.demo.ui.fragment.tree
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.include_viewpager.*
 import me.hgj.jetpackmvvm.demo.R
 import me.hgj.jetpackmvvm.demo.app.base.BaseFragment
@@ -71,7 +70,7 @@ class TreeArrFragment : BaseFragment<TreeViewModel, FragmentViewpagerBinding>() 
     }
 
     override fun createObserver() {
-        appViewModel.appColor.observe(viewLifecycleOwner, Observer {
+        appViewModel.appColor.observe(viewLifecycleOwner, {
             setUiTheme(it, viewpager_linear)
         })
     }
