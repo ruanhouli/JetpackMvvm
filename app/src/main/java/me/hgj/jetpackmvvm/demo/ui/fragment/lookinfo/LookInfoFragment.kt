@@ -61,17 +61,17 @@ class LookInfoFragment : BaseFragment<LookInfoViewModel, FragmentLookinfoBinding
         }
         loadService = loadServiceInit(share_linear) {
             loadService.showLoading()
-            requestLookInfoViewModel.getLookinfo(shareId, true)
+            requestLookInfoViewModel.getLookInfo(shareId, true)
         }
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
-            it.initFooter(SwipeRecyclerView.LoadMoreListener {
-                requestLookInfoViewModel.getLookinfo(shareId, false)
+            it.initFooter({
+                requestLookInfoViewModel.getLookInfo(shareId, false)
             })
             it.initFloatBtn(floatbtn)
         }
         swipeRefresh.init {
-            requestLookInfoViewModel.getLookinfo(shareId, true)
+            requestLookInfoViewModel.getLookInfo(shareId, true)
         }
         articleAdapter.run {
             setCollectClick { item, v, position ->
@@ -95,19 +95,19 @@ class LookInfoFragment : BaseFragment<LookInfoViewModel, FragmentLookinfoBinding
     override fun lazyLoadData() {
         //设置界面 加载中
         loadService.showLoading()
-        requestLookInfoViewModel.getLookinfo(shareId, true)
+        requestLookInfoViewModel.getLookInfo(shareId, true)
     }
 
     override fun createObserver() {
-        requestLookInfoViewModel.shareResponse.observe(viewLifecycleOwner, Observer {
+        requestLookInfoViewModel.shareResponse.observe(viewLifecycleOwner, {
             mViewModel.name.set(it.coinInfo.username)
             mViewModel.info.set("积分 : ${it.coinInfo.coinCount}　排名 : ${it.coinInfo.rank}")
         })
-        requestLookInfoViewModel.shareListDataUistate.observe(viewLifecycleOwner, Observer {
+        requestLookInfoViewModel.shareListDataUistate.observe(viewLifecycleOwner, {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
             loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
         })
-        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
+        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 //收藏或取消收藏操作成功，发送全局收藏消息
                 eventViewModel.collectEvent.value = CollectBus(it.id, it.collect)
@@ -124,7 +124,7 @@ class LookInfoFragment : BaseFragment<LookInfoViewModel, FragmentLookinfoBinding
         })
         appViewModel.run {
             //监听账户信息是否改变 有值时(登录)将相关的数据设置为已收藏，为空时(退出登录)，将已收藏的数据变为未收藏
-            userinfo.observe(viewLifecycleOwner, Observer {
+            userinfo.observe(viewLifecycleOwner, {
                 if (it != null) {
                     it.collectIds.forEach { id ->
                         for (item in articleAdapter.data) {
@@ -142,7 +142,7 @@ class LookInfoFragment : BaseFragment<LookInfoViewModel, FragmentLookinfoBinding
                 articleAdapter.notifyDataSetChanged()
             })
             //监听全局的收藏信息 收藏的Id跟本列表的数据id匹配则需要更新
-            eventViewModel.collectEvent.observe(viewLifecycleOwner, Observer {
+            eventViewModel.collectEvent.observe(viewLifecycleOwner, {
                 for (index in articleAdapter.data.indices) {
                     if (articleAdapter.data[index].id == it.id) {
                         articleAdapter.data[index].collect = it.collect

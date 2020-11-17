@@ -72,7 +72,7 @@ class ZipHelper private constructor() {
          * @param bytesToCompress
          * @return
          */
-        fun compressForZlib(bytesToCompress: ByteArray?): ByteArray {
+        private fun compressForZlib(bytesToCompress: ByteArray?): ByteArray {
             val deflater = Deflater()
             deflater.setInput(bytesToCompress)
             deflater.finish()
@@ -131,13 +131,7 @@ class ZipHelper private constructor() {
             }
             return null
         }
-        /**
-         * gzip decompress 2 string
-         *
-         * @param compressed
-         * @param charsetName
-         * @return
-         */
+
         /**
          * gzip decompress 2 string
          *
@@ -151,14 +145,14 @@ class ZipHelper private constructor() {
             compressed: ByteArray,
             charsetName: String? = "UTF-8"
         ): String? {
-            val BUFFER_SIZE = compressed.size
+            val bufferSize = compressed.size
             var gis: GZIPInputStream? = null
             var `is`: ByteArrayInputStream? = null
             try {
                 `is` = ByteArrayInputStream(compressed)
-                gis = GZIPInputStream(`is`, BUFFER_SIZE)
+                gis = GZIPInputStream(`is`, bufferSize)
                 val string = StringBuilder()
-                val data = ByteArray(BUFFER_SIZE)
+                val data = ByteArray(bufferSize)
                 var bytesRead: Int
                 while (gis.read(data).also { bytesRead = it } != -1) {
                     string.append(String(data, 0, bytesRead, Charset.forName(charsetName)))

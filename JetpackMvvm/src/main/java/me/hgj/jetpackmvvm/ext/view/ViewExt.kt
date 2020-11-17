@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.widget.ImageView
-import org.jetbrains.annotations.NotNull
 
 /**
  * 设置view显示
@@ -26,10 +25,10 @@ fun View.invisible() {
 /**
  * 根据条件设置view显示隐藏 为true 显示，为false 隐藏
  */
-fun View.visibleOrGone(flag:Boolean) {
-    visibility = if(flag){
+fun View.visibleOrGone(flag: Boolean) {
+    visibility = if (flag) {
         View.VISIBLE
-    }else{
+    } else {
         View.GONE
     }
 }
@@ -37,10 +36,10 @@ fun View.visibleOrGone(flag:Boolean) {
 /**
  * 根据条件设置view显示隐藏 为true 显示，为false 隐藏
  */
-fun View.visibleOrInvisible(flag:Boolean) {
-    visibility = if(flag){
+fun View.visibleOrInvisible(flag: Boolean) {
+    visibility = if (flag) {
         View.VISIBLE
-    }else{
+    } else {
         View.INVISIBLE
     }
 }
@@ -95,12 +94,13 @@ fun createBitmapSafely(width: Int, height: Int, config: Bitmap.Config, retryCoun
 }
 
 
+var lastClickTime = 0L
+
 /**
  * 防止重复点击事件 默认0.5秒内不可重复点击
  * @param interval 时间间隔 默认0.5秒
  * @param action 执行方法
  */
-var lastClickTime = 0L
 fun View.clickNoRepeat(interval: Long = 500, action: (view: View) -> Unit) {
     setOnClickListener {
         val currentTime = System.currentTimeMillis()
@@ -113,10 +113,10 @@ fun View.clickNoRepeat(interval: Long = 500, action: (view: View) -> Unit) {
 }
 
 
-fun Any?.notNull(notNullAction:(value:Any) ->Unit,nullAction1:() ->Unit){
-    if(this!=null){
+fun Any?.notNull(notNullAction: (value: Any) -> Unit, nullAction1: () -> Unit) {
+    if (this != null) {
         notNullAction.invoke(this)
-    }else{
+    } else {
         nullAction1.invoke()
     }
 }

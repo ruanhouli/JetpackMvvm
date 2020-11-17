@@ -2,11 +2,9 @@ package me.hgj.jetpackmvvm.demo.ui.fragment.publicNumber
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ConvertUtils
 import com.kingja.loadsir.core.LoadService
-import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import kotlinx.android.synthetic.main.include_list.*
 import kotlinx.android.synthetic.main.include_recyclerview.*
 import me.hgj.jetpackmvvm.demo.R
@@ -42,10 +40,10 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
     //该项目对应的id
     private var cid = 0
 
-    //收藏viewmodel
+    //收藏viewModel
     private val requestCollectViewModel: RequestCollectViewModel by viewModels()
 
-    //请求viewmodel
+    //请求viewModel
     private val requestPublicNumberViewModel: RequestPublicNumberViewModel by viewModels()
 
     override fun layoutId() = R.layout.include_list
@@ -63,10 +61,10 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
         //初始化recyclerView
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
-            footView = it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            footView = it.initFooter {
                 //触发加载更多时请求数据
                 requestPublicNumberViewModel.getPublicData(false, cid)
-            })
+            }
             //初始化FloatingActionButton
             it.initFloatBtn(floatbtn)
         }
@@ -78,14 +76,14 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
         }
 
         articleAdapter.run {
-            setCollectClick { item, v, position ->
+            setCollectClick { item, v, _ ->
                 if (v.isChecked) {
                     requestCollectViewModel.uncollect(item.id)
                 } else {
                     requestCollectViewModel.collect(item.id)
                 }
             }
-            setOnItemClickListener { _, view, position ->
+            setOnItemClickListener { _, _, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
                     putParcelable("articleData", articleAdapter.data[position])
                 })
@@ -111,11 +109,11 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
     }
 
     override fun createObserver() {
-        requestPublicNumberViewModel.publicDataState.observe(viewLifecycleOwner, Observer {
+        requestPublicNumberViewModel.publicDataState.observe(viewLifecycleOwner, {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
             loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
         })
-        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
+        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 eventViewModel.collectEvent.value =  CollectBus(it.id, it.collect)
 
@@ -132,7 +130,7 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
         })
         appViewModel.run {
             //监听账户信息是否改变 有值时(登录)将相关的数据设置为已收藏，为空时(退出登录)，将已收藏的数据变为未收藏
-            userinfo.observe(viewLifecycleOwner, Observer {
+            userinfo.observe(viewLifecycleOwner, {
                 if (it != null) {
                     it.collectIds.forEach { id ->
                         for (item in articleAdapter.data) {
@@ -150,15 +148,15 @@ class PublicChildFragment : BaseFragment<PublicNumberViewModel, IncludeListBindi
                 articleAdapter.notifyDataSetChanged()
             })
             //监听全局的主题颜色改变
-            appColor.observe(viewLifecycleOwner, Observer {
+            appColor.observe(viewLifecycleOwner, {
                 setUiTheme(it, floatbtn, swipeRefresh, loadService, footView)
             })
             //监听全局的列表动画改编
-            appAnimation.observe(viewLifecycleOwner, Observer {
+            appAnimation.observe(viewLifecycleOwner, {
                 articleAdapter.setAdapterAnimation(it)
             })
             //监听全局的收藏信息 收藏的Id跟本列表的数据id匹配则需要更新
-            eventViewModel.collectEvent.observe(viewLifecycleOwner, Observer {
+            eventViewModel.collectEvent.observe(viewLifecycleOwner, {
                 for (index in articleAdapter.data.indices) {
                     if (articleAdapter.data[index].id == it.id) {
                         articleAdapter.data[index].collect = it.collect

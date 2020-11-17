@@ -46,7 +46,7 @@ class RegisterFrgment : BaseFragment<LoginRegisterViewModel, FragmentRegisterBin
     override fun createObserver() {
         requestLoginRegisterViewModel.loginResult.observe(
             viewLifecycleOwner,
-            Observer { resultState ->
+            { resultState ->
                 parseState(resultState, {
                     CacheUtil.setIsLogin(true)
                     CacheUtil.setUser(it)

@@ -277,7 +277,7 @@ suspend fun <T> executeResponse(
     success: suspend CoroutineScope.(T) -> Unit
 ) {
     coroutineScope {
-        if (response.isSucces()) success(response.getResponseData())
+        if (response.isSuccess()) success(response.getResponseData())
         else throw AppException(
             response.getResponseCode(),
             response.getResponseMsg(),

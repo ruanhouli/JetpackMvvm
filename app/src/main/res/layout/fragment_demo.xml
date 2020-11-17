@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:text="下载文件（框架自带）"
                 android:textColor="@color/black"
-                android:textSize="15dp" />
+                android:textSize="15sp" />
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -61,7 +61,7 @@
                 android:gravity="center"
                 android:text="下载文件(利用三方库)"
                 android:textColor="@color/black"
-                android:textSize="15dp" />
+                android:textSize="15sp" />
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>

@@ -26,7 +26,7 @@ sealed class ResultState<out T> {
  * @param result 请求结果
  */
 fun <T> MutableLiveData<ResultState<T>>.paresResult(result: BaseResponse<T>) {
-    value = if (result.isSucces()) ResultState.onAppSuccess(result.getResponseData()) else
+    value = if (result.isSuccess()) ResultState.onAppSuccess(result.getResponseData()) else
         ResultState.onAppError(AppException(result.getResponseCode(), result.getResponseMsg()))
 }
 

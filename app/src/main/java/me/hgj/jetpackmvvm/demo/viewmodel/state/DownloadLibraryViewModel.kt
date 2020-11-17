@@ -55,8 +55,4 @@ class DownloadLibraryViewModel : BaseViewModel() {
         baseDownloadTask?.let { fileDownloader.pause(it.id) }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
-
 }

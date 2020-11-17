@@ -1,5 +1,6 @@
 package me.hgj.jetpackmvvm.demo.app.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -171,6 +172,7 @@ object SettingUtil {
     /**
      * 设置loading的颜色 加载布局
      */
+    @SuppressLint("CutPasteId")
     fun setLoadingColor(color:Int, loadService: LoadService<Any>) {
         loadService.setCallBack(LoadingCallback::class.java) { _, view ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

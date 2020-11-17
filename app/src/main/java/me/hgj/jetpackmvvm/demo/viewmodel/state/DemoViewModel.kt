@@ -7,6 +7,4 @@ import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
  * @date   : 2020/7/13
  *
  */
-class DemoViewModel : BaseViewModel() {
-
-}
+class DemoViewModel : BaseViewModel()

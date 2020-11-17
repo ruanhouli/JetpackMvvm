@@ -73,7 +73,7 @@ class CollectUrlFragment : BaseFragment<RequestCollectViewModel, IncludeListBind
     }
 
     override fun createObserver() {
-        mViewModel.urlDataState.observe(viewLifecycleOwner, Observer {
+        mViewModel.urlDataState.observe(viewLifecycleOwner, {
             swipeRefresh.isRefreshing = false
             recyclerView.loadMoreFinish(it.isEmpty, it.hasMore)
             if (it.isSuccess) {
@@ -97,7 +97,7 @@ class CollectUrlFragment : BaseFragment<RequestCollectViewModel, IncludeListBind
             if (it.isSuccess) {
                 for (index in articleAdapter.data.indices) {
                     if (articleAdapter.data[index].id == it.id) {
-                        articleAdapter.remove(index)
+                        articleAdapter.removeAt(index)
                         if (articleAdapter.data.size == 0) {
                             loadService.showEmpty()
                         }

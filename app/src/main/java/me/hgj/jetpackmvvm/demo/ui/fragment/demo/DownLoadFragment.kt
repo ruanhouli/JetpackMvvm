@@ -1,8 +1,7 @@
 package me.hgj.jetpackmvvm.demo.ui.fragment.demo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.lifecycle.Observer
-import com.liulishuo.filedownloader.FileDownloader
 import kotlinx.android.synthetic.main.fragment_download.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import me.hgj.jetpackmvvm.demo.R
@@ -33,8 +32,9 @@ class DownLoadFragment : BaseFragment<DownloadViewModel, FragmentDownloadBinding
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun createObserver() {
-        mViewModel.downloadData.observe(viewLifecycleOwner, Observer {
+        mViewModel.downloadData.observe(viewLifecycleOwner, {
             when (it) {
                 is DownloadResultState.Pending -> {
                     //开始下载

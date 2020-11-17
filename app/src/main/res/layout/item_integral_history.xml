@@ -27,7 +27,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:textColor="@color/colorBlack666"
-            android:textSize="15dp"
+            android:textSize="15sp"
             tools:text="签到积分 10+21" />
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="12dp"
             android:textColor="@color/textHint"
-            android:textSize="12dp"
+            android:textSize="12sp"
             tools:text="2019-09-1" />
 
         <TextView
@@ -52,7 +52,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

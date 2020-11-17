@@ -1,5 +1,6 @@
 package me.hgj.jetpackmvvm.demo.app.weight.customview
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -37,6 +38,7 @@ class PriorityDialog(context: Context, type: Int) : Dialog(context, R.style.Bott
         window.attributes = attributes
     }
 
+    @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //添加数据

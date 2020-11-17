@@ -64,7 +64,7 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
         //初始化recyclerView
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
-            it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            it.initFooter({
                 //触发加载更多时请求数据
                 requestSearchViewModel.getSearchResultData(searchKey, false)
             })
@@ -113,7 +113,7 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
     }
 
     override fun createObserver() {
-        requestSearchViewModel.seachResultData.observe(viewLifecycleOwner, Observer { resultState ->
+        requestSearchViewModel.seachResultData.observe(viewLifecycleOwner, { resultState ->
             parseState(resultState, {
                 swipeRefresh.isRefreshing = false
                 //请求成功，页码+1
@@ -143,7 +143,7 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
                 }
             })
         })
-        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
+        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 eventViewModel.collectEvent.value = CollectBus(it.id, it.collect)
             } else {
@@ -159,7 +159,7 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
         })
         appViewModel.run {
             //监听账户信息是否改变 有值时(登录)将相关的数据设置为已收藏，为空时(退出登录)，将已收藏的数据变为未收藏
-            userinfo.observe(viewLifecycleOwner, Observer {
+            userinfo.observe(viewLifecycleOwner, {
                 if (it != null) {
                     it.collectIds.forEach { id ->
                         for (item in articleAdapter.data) {
@@ -178,7 +178,7 @@ class SearchResultFragment : BaseFragment<SearchViewModel, FragmentListBinding>(
             })
 
             //监听全局的收藏信息 收藏的Id跟本列表的数据id匹配则需要更新
-            eventViewModel.collectEvent.observe(viewLifecycleOwner, Observer {
+            eventViewModel.collectEvent.observe(viewLifecycleOwner, {
                 for (index in articleAdapter.data.indices) {
                     if (articleAdapter.data[index].id == it.id) {
                         articleAdapter.data[index].collect = it.collect

@@ -15,7 +15,7 @@ import java.util.Enumeration;
 
 /**
  * @author : hgj
- * @date   : 2020/6/11
+ * @date : 2020/6/11
  */
 
 public class NetworkUtil {
@@ -39,7 +39,7 @@ public class NetworkUtil {
     /**
      * TIMEOUT
      */
-    private static int TIMEOUT = 3000;
+    private static final int TIMEOUT = 3000;
 
 
     /**

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
@@ -64,7 +63,7 @@
                         android:paddingRight="12dp"
                         android:text="@={viewmodel.username}"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
 
                     <ImageView
                         android:id="@+id/registerClear"
@@ -98,7 +97,7 @@
                         android:text="@={viewmodel.password}"
                         bind:showPwd="@{viewmodel.isShowPwd()}"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
 
                     <CheckBox
                         android:id="@+id/registerKey"
@@ -133,7 +132,7 @@
                         android:text="@={viewmodel.password2}"
                         bind:showPwd="@{viewmodel.isShowPwd2()}"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="15sp" />
 
                     <CheckBox
                         android:id="@+id/registerKey1"
@@ -157,7 +156,7 @@
                     android:text="注册并登录"
                     android:onClick="@{()->click.register()}"
                     android:textColor="@color/white"
-                    android:textSize="16dp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
         </ScrollView>

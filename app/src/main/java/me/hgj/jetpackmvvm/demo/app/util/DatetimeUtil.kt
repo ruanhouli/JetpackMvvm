@@ -21,7 +21,7 @@ object DatetimeUtil {
     /**
      * 获取现在时刻
      */
-    val now: Date
+    private val now: Date
         get() = Date(Date().time)
     /**
      * 获取现在时刻

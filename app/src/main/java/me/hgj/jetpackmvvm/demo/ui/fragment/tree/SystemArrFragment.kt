@@ -1,5 +1,6 @@
 package me.hgj.jetpackmvvm.demo.ui.fragment.tree
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.FrameLayout
@@ -31,6 +32,7 @@ class SystemArrFragment : BaseFragment<TreeViewModel, FragmentSystemBinding>() {
 
     override fun layoutId() = R.layout.fragment_system
 
+    @SuppressLint("RtlHardcoded")
     override fun initView(savedInstanceState: Bundle?)  {
         arguments?.let {
             data = it.getParcelable("data")!!

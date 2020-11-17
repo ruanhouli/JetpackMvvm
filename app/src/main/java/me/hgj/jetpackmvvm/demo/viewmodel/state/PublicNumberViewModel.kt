@@ -7,5 +7,4 @@ import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
  * 时间　: 2020/2/29
  * 描述　:
  */
-class PublicNumberViewModel : BaseViewModel() {
-}
+class PublicNumberViewModel : BaseViewModel()

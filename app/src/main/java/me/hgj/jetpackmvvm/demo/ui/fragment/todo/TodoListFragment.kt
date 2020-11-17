@@ -2,7 +2,6 @@ package me.hgj.jetpackmvvm.demo.ui.fragment.todo
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
@@ -11,7 +10,6 @@ import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.afollestad.materialdialogs.list.listItems
 import com.blankj.utilcode.util.ConvertUtils
 import com.kingja.loadsir.core.LoadService
-import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import kotlinx.android.synthetic.main.include_list.*
 import kotlinx.android.synthetic.main.include_recyclerview.*
 import kotlinx.android.synthetic.main.include_toolbar.*
@@ -25,7 +23,6 @@ import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestTodoViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.state.TodoViewModel
 import me.hgj.jetpackmvvm.ext.nav
 import me.hgj.jetpackmvvm.ext.navigateAction
-import me.hgj.jetpackmvvm.ext.util.logd
 
 /**
  * 作者　: hegaojian
@@ -71,7 +68,7 @@ class TodoListFragment : BaseFragment<TodoViewModel, FragmentListBinding>() {
         //初始化recyclerView
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
-            it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            it.initFooter({
                 //触发加载更多时请求数据
                 requestViewModel.getTodoData(false)
             })
@@ -147,21 +144,21 @@ class TodoListFragment : BaseFragment<TodoViewModel, FragmentListBinding>() {
     }
 
     override fun createObserver() {
-        requestViewModel.todoDataState.observe(viewLifecycleOwner, Observer {
+        requestViewModel.todoDataState.observe(viewLifecycleOwner, {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
             loadListData(it, articleAdapter, loadService, recyclerView,swipeRefresh)
         })
-        requestViewModel.delDataState.observe(viewLifecycleOwner, Observer {
+        requestViewModel.delDataState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 if (articleAdapter.data.size == 1) {
                     loadService.showEmpty()
                 }
-                articleAdapter.remove(it.data!!)
+                articleAdapter.removeAt(it.data!!)
             } else {
                 showMessage(it.errorMsg)
             }
         })
-        requestViewModel.doneDataState.observe(viewLifecycleOwner, Observer {
+        requestViewModel.doneDataState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 swipeRefresh.isRefreshing = true
                 requestViewModel.getTodoData(true)
@@ -170,7 +167,7 @@ class TodoListFragment : BaseFragment<TodoViewModel, FragmentListBinding>() {
             }
         })
 
-        eventViewModel.todoEvent.observe(viewLifecycleOwner, Observer {
+        eventViewModel.todoEvent.observe(viewLifecycleOwner, {
             if (articleAdapter.data.size == 0) {
                 //界面没有数据时，变为加载中 增强一丢丢体验
                 loadService.showLoading()

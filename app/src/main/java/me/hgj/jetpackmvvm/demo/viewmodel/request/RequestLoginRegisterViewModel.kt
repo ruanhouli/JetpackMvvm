@@ -7,7 +7,6 @@ import me.hgj.jetpackmvvm.demo.data.model.bean.UserInfo
 import me.hgj.jetpackmvvm.demo.data.repository.request.HttpRequestCoroutine
 import me.hgj.jetpackmvvm.ext.request
 import me.hgj.jetpackmvvm.state.ResultState
-import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 
 /**
  * 作者　: hegaojian

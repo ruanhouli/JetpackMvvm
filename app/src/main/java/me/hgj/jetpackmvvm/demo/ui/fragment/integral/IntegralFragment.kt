@@ -90,7 +90,7 @@ class IntegralFragment : BaseFragment<IntegralViewModel, FragmentIntegralBinding
         //初始化recyclerView
         recyclerView.init(LinearLayoutManager(context), integralAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
-            it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            it.initFooter({
                 //触发加载更多时请求数据
                 requestIntegralViewModel.getIntegralData(false)
             })
@@ -116,7 +116,7 @@ class IntegralFragment : BaseFragment<IntegralViewModel, FragmentIntegralBinding
     }
 
     override fun createObserver() {
-        requestIntegralViewModel.integralDataState.observe(viewLifecycleOwner, Observer {
+        requestIntegralViewModel.integralDataState.observe(viewLifecycleOwner, {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
             loadListData(it, integralAdapter, loadService, recyclerView,swipeRefresh)
         })

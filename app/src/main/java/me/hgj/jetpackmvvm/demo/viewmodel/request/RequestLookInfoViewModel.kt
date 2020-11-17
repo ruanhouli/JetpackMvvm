@@ -21,11 +21,11 @@ class RequestLookInfoViewModel : BaseViewModel() {
 
     var shareResponse = MutableLiveData<ShareResponse>()
 
-    fun getLookinfo(id: Int, isRefresh: Boolean) {
+    fun getLookInfo(id: Int, isRefresh: Boolean) {
         if (isRefresh) {
             pageNo = 1
         }
-        request({ apiService.getShareByidData(id, pageNo) }, {
+        request({ apiService.getShareByIdData(id, pageNo) }, {
             //请求成功
             pageNo++
             shareResponse.value = it

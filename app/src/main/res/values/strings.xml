@@ -15,7 +15,6 @@
     <string name="choose_theme_color">主题颜色</string>
     <string name="choose_theme_color_summary">设置App的主题颜色</string>
     <string name="setting_about">关于</string>
-    <string name="setting_project">开源项目</string>
     <string name="setting_version">版本</string>
     <string name="setting_exit">退出</string>
     <string name="clear_cache">清除缓存</string>

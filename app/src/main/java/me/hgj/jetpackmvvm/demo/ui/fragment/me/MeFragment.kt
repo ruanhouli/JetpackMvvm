@@ -1,9 +1,7 @@
 package me.hgj.jetpackmvvm.demo.ui.fragment.me
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.ToastUtils
 import kotlinx.android.synthetic.main.fragment_me.*
 import me.hgj.jetpackmvvm.demo.R
@@ -15,7 +13,6 @@ import me.hgj.jetpackmvvm.demo.app.ext.setUiTheme
 import me.hgj.jetpackmvvm.demo.data.model.bean.BannerResponse
 import me.hgj.jetpackmvvm.demo.data.model.bean.IntegralResponse
 import me.hgj.jetpackmvvm.demo.databinding.FragmentMeBinding
-import me.hgj.jetpackmvvm.demo.ui.activity.TestActivity
 import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestMeViewModel
 import me.hgj.jetpackmvvm.demo.viewmodel.state.MeViewModel
 import me.hgj.jetpackmvvm.ext.nav
@@ -56,7 +53,7 @@ class MeFragment : BaseFragment<MeViewModel, FragmentMeBinding>() {
 
     override fun createObserver() {
 
-        requestMeViewModel.meData.observe(viewLifecycleOwner, Observer { resultState ->
+        requestMeViewModel.meData.observe(viewLifecycleOwner, { resultState ->
             me_swipe.isRefreshing = false
             parseState(resultState, {
                 rank = it
@@ -68,11 +65,11 @@ class MeFragment : BaseFragment<MeViewModel, FragmentMeBinding>() {
         })
 
         appViewModel.run {
-            appColor.observe(viewLifecycleOwner, Observer {
+            appColor.observe(viewLifecycleOwner, {
                 setUiTheme(it, me_linear, me_swipe, me_integral)
             })
-            userinfo.observe(viewLifecycleOwner, Observer {
-                it.notNull({
+            userinfo.observe(viewLifecycleOwner, { userInfo ->
+                userInfo.notNull({
                     me_swipe.isRefreshing = true
                     mViewModel.name.set(if (it.nickname.isEmpty()) it.username else it.nickname)
                     requestMeViewModel.getIntegral()
@@ -111,7 +108,7 @@ class MeFragment : BaseFragment<MeViewModel, FragmentMeBinding>() {
         }
 
         /** 文章 */
-        fun ariticle() {
+        fun article() {
             nav().jumpByLogin {
                 it.navigateAction(R.id.action_mainfragment_to_ariticleFragment)
             }

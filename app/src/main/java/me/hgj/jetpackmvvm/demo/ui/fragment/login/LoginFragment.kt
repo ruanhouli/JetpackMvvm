@@ -50,7 +50,7 @@ class LoginFragment : BaseFragment<LoginRegisterViewModel, FragmentLoginBinding>
     }
 
     override fun createObserver() {
-        requestLoginRegisterViewModel.loginResult.observe(viewLifecycleOwner,Observer { resultState ->
+        requestLoginRegisterViewModel.loginResult.observe(viewLifecycleOwner, { resultState ->
                 parseState(resultState, {
                     //登录成功 通知账户数据发生改变鸟
                     CacheUtil.setUser(it)

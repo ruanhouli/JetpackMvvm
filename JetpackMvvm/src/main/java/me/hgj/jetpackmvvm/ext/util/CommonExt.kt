@@ -1,7 +1,9 @@
 package me.hgj.jetpackmvvm.ext.util
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.Context
+import android.os.Build
 import android.provider.Settings
 import android.text.Html
 import android.text.Spanned
@@ -129,8 +131,9 @@ fun setOnclickNoRepeat(vararg views: View?, interval: Long = 500, onClick: (View
     }
 }
 
-fun String.toHtml(flag: Int = Html.FROM_HTML_MODE_LEGACY): Spanned {
-    return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+
+fun String.toHtml(@SuppressLint("InlinedApi") flag: Int = Html.FROM_HTML_MODE_LEGACY): Spanned {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(this, flag)
     } else {
         Html.fromHtml(this)

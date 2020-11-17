@@ -125,7 +125,7 @@ class WebFragment : BaseFragment<WebViewModel, FragmentWebBinding>() {
     }
 
     override fun createObserver() {
-        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
+        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 mViewModel.collect = it.collect
                 eventViewModel.collectEvent.value = CollectBus(it.id, it.collect)
@@ -136,7 +136,7 @@ class WebFragment : BaseFragment<WebViewModel, FragmentWebBinding>() {
                 showMessage(it.errorMsg)
             }
         })
-        requestCollectViewModel.collectUrlUiState.observe(viewLifecycleOwner, Observer {
+        requestCollectViewModel.collectUrlUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 eventViewModel.collectEvent.value = CollectBus(it.id, it.collect)
                 mViewModel.collect = it.collect

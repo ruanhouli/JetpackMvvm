@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:textColor="@color/colorBlack333"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             tools:text="99+" />
 
@@ -37,7 +37,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/colorBlack666"
-            android:textSize="16dp"
+            android:textSize="16sp"
             tools:text="时长2年半的练习生" />
 
         <TextView
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:textColor="@color/textHint"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="bold"
             tools:text="100" />
     </LinearLayout>

@@ -17,9 +17,9 @@ import me.hgj.jetpackmvvm.ext.util.toHtml
 class CollectAdapter(data: ArrayList<CollectResponse>) :
     BaseDelegateMultiAdapter<CollectResponse, BaseViewHolder>(data) {
     //文章类型
-    private val Ariticle = 1
+    private val article = 1
     //项目类型 本来打算不区分文章和项目布局用统一布局的，但是布局完以后发现差异化蛮大的，所以还是分开吧
-    private val Project = 2
+    private val project = 2
     private var collectAction: (item: CollectResponse, v: CollectView, position: Int) -> Unit =
         { _: CollectResponse, _: CollectView, _: Int -> }
 
@@ -31,19 +31,19 @@ class CollectAdapter(data: ArrayList<CollectResponse>) :
         setMultiTypeDelegate(object : BaseMultiTypeDelegate<CollectResponse>() {
             override fun getItemType(data: List<CollectResponse>, position: Int): Int {
                 //根据是否有图片 判断为文章还是项目，好像有点low的感觉。。。我看实体类好像没有相关的字段，就用了这个，也有可能是我没发现
-                return if (TextUtils.isEmpty(data[position].envelopePic)) Ariticle else Project
+                return if (TextUtils.isEmpty(data[position].envelopePic)) article else project
             }
         })
         // 第二步，绑定 item 类型
         getMultiTypeDelegate()?.let {
-            it.addItemType(Ariticle, R.layout.item_ariticle)
-            it.addItemType(Project, R.layout.item_project)
+            it.addItemType(article, R.layout.item_ariticle)
+            it.addItemType(project, R.layout.item_project)
         }
     }
 
     override fun convert(holder: BaseViewHolder, item: CollectResponse) {
         when (holder.itemViewType) {
-            Ariticle -> {
+            article -> {
                 //文章布局的赋值
                 item.run {
                     holder.setText(R.id.item_home_author, if (author.isEmpty()) "匿名用户" else author)
@@ -63,7 +63,7 @@ class CollectAdapter(data: ArrayList<CollectResponse>) :
                         }
                     })
             }
-            Project -> {
+            project -> {
                 //项目布局的赋值
                 item.run {
                     holder.setText(

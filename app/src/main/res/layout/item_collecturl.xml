@@ -26,7 +26,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:textColor="@color/colorBlack333"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textStyle="bold"
             tools:text="玩Android 开放API-玩Android - wanandroid.com" />
 
@@ -50,7 +50,7 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:textColor="@color/colorBlack666"
-                android:textSize="13dp"
+                android:textSize="13sp"
                 tools:text="https:\/\/www.wanandroid.com\/blog\/show\" />
 
             <me.hgj.jetpackmvvm.demo.app.weight.customview.CollectView

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="好　用"
         android:textColor="@color/white"
-        android:textSize="42dp"
+        android:textSize="42sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

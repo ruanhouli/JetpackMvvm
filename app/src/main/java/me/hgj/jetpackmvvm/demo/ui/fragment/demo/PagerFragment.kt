@@ -2,7 +2,6 @@ package me.hgj.jetpackmvvm.demo.ui.fragment.demo
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
 import kotlinx.android.synthetic.main.fragment_pager.*
 import me.hgj.jetpackmvvm.demo.R
@@ -43,7 +42,7 @@ class PagerFragment : BaseFragment<MainViewModel, FragmentPagerBinding>() {
             }
 
             override fun getCount(): Int {
-                return 5;
+                return 5
             }
         }
         pagerViewpager.offscreenPageLimit = 5

@@ -1,14 +1,12 @@
 package me.hgj.jetpackmvvm.demo.ui.activity
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import com.blankj.utilcode.util.ToastUtils
 import com.tencent.bugly.beta.Beta
@@ -64,10 +62,11 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
             supportActionBar?.setBackgroundDrawable(ColorDrawable(it))
             StatusBarUtil.setColor(this, it, 0)
         }
+
     }
 
     override fun createObserver() {
-        appViewModel.appColor.observe(this, Observer {
+        appViewModel.appColor.observe(this, {
             supportActionBar?.setBackgroundDrawable(ColorDrawable(it))
             StatusBarUtil.setColor(this, it, 0)
         })

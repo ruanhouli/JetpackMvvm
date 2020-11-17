@@ -10,7 +10,7 @@ import java.util.*
  */
 object KtxActivityManger {
     private val mActivityList = LinkedList<Activity>()
-    val currentActivity: Activity?
+    private val currentActivity: Activity?
         get() =
             if (mActivityList.isEmpty()) null
             else mActivityList.last

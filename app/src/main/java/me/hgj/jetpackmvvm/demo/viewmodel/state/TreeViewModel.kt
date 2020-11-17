@@ -7,7 +7,4 @@ import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
  * 时间　: 2020/3/2
  * 描述　:
  */
-class TreeViewModel : BaseViewModel() {
-
-
-}
+class TreeViewModel : BaseViewModel()

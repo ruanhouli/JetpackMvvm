@@ -1,11 +1,14 @@
 package me.hgj.jetpackmvvm.demo.ui.fragment.setting
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.preference.Preference
@@ -44,12 +47,14 @@ class SettingFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener {
 
     //这里不能继承BaseFragment了，所以手动获取一下 AppViewModel
-    val shareViewModel: AppViewModel by lazy { getAppViewModel<AppViewModel>() }
+    val shareViewModel: AppViewModel by lazy { getAppViewModel() }
 
     private var colorPreview: IconPreference? = null
 
     var toolbarView: View? = null
 
+    @RequiresApi(Build.VERSION_CODES.N)
+    @SuppressLint("InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //这里重写根据PreferenceFragmentCompat 的布局 ，往他的根布局插入了一个toolbar

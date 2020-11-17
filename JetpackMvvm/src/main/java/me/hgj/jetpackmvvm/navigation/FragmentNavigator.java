@@ -66,7 +66,7 @@ public class FragmentNavigator extends Navigator<FragmentNavigator.Destination> 
     private final Context mContext;
     private final FragmentManager mFragmentManager;
     private final int mContainerId;
-    private ArrayDeque<Integer> mBackStack = new ArrayDeque<>();
+    private final ArrayDeque<Integer> mBackStack = new ArrayDeque<>();
 
     public FragmentNavigator(@NonNull Context context, @NonNull FragmentManager manager,
                              int containerId) {
@@ -132,7 +132,7 @@ public class FragmentNavigator extends Navigator<FragmentNavigator.Destination> 
     @NonNull
     public Fragment instantiateFragment(@NonNull Context context,
                                         @NonNull FragmentManager fragmentManager,
-                                        @NonNull String className, @SuppressWarnings("unused") @Nullable Bundle args) {
+                                        @NonNull String className, @Nullable Bundle args) {
         return fragmentManager.getFragmentFactory().instantiate(
                 context.getClassLoader(), className);
     }

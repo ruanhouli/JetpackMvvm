@@ -17,7 +17,7 @@ class WelcomeBannerAdapter : BaseBannerAdapter<String, WelcomeBannerViewHolder>(
     }
 
     override fun createViewHolder(itemView: View, viewType: Int): WelcomeBannerViewHolder {
-        return WelcomeBannerViewHolder(itemView);
+        return WelcomeBannerViewHolder(itemView)
     }
 
     override fun onBind(

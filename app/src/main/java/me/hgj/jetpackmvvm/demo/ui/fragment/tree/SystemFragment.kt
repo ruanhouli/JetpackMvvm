@@ -56,6 +56,7 @@ class SystemFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
         systemAdapter.run {
             setOnItemClickListener { _, _, position ->
                 if(systemAdapter.data[position].children.isNotEmpty()){
+
                     nav().navigateAction(R.id.action_mainfragment_to_systemArrFragment,
                         Bundle().apply {
                             putParcelable("data", systemAdapter.data[position])

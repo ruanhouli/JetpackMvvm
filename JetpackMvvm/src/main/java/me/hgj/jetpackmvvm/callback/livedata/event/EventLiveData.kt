@@ -16,7 +16,6 @@
 package me.hgj.jetpackmvvm.callback.livedata.event
 
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import java.util.*
@@ -49,7 +48,7 @@ open class EventLiveData<T> : MutableLiveData<T>() {
     private var isCleaning = false
     private var hasHandled = true
     private var isDelaying = false
-    protected var DELAY_TO_CLEAR_EVENT = 1000
+    private var delayClearTime = 1000
     private val mTimer = Timer()
     private var mTask: TimerTask? = null
     protected var isAllowNullValue = false
@@ -117,7 +116,7 @@ open class EventLiveData<T> : MutableLiveData<T>() {
                     clear()
                 }
             }
-            mTimer.schedule(mTask, DELAY_TO_CLEAR_EVENT.toLong())
+            mTimer.schedule(mTask, delayClearTime.toLong())
         }
     }
 

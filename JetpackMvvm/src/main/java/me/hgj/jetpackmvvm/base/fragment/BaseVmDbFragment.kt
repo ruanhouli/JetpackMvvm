@@ -6,14 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import me.hgj.jetpackmvvm.base.viewmodel.BaseViewModel
-import me.hgj.jetpackmvvm.ext.getVmClazz
-import me.hgj.jetpackmvvm.network.manager.NetState
-import me.hgj.jetpackmvvm.network.manager.NetworkStateManager
 
 /**
  * 作者　: hegaojian

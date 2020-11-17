@@ -101,7 +101,7 @@ abstract class BaseVmFragment<VM : BaseViewModel> : Fragment() {
                 //在Fragment中，只有懒加载过了才能开启网络变化监听
                 NetworkStateManager.instance.mNetworkStateCallback.observe(
                     viewLifecycleOwner,
-                    Observer {
+                    {
                         //不是首次订阅时调用方法，防止数据第一次监听错误
                         if (!isFirst) {
                             onNetworkStateChanged(it)
@@ -125,14 +125,14 @@ abstract class BaseVmFragment<VM : BaseViewModel> : Fragment() {
      * 注册 UI 事件
      */
     private fun registorDefUIChange() {
-        mViewModel.loadingChange.showDialog.observe(viewLifecycleOwner, Observer {
+        mViewModel.loadingChange.showDialog.observe(viewLifecycleOwner, {
             showLoading(
                 if (it.isEmpty()) {
                     "请求网络中..."
                 } else it
             )
         })
-        mViewModel.loadingChange.dismissDialog.observe(viewLifecycleOwner, Observer {
+        mViewModel.loadingChange.dismissDialog.observe(viewLifecycleOwner, {
             dismissLoading()
         })
     }
@@ -144,11 +144,11 @@ abstract class BaseVmFragment<VM : BaseViewModel> : Fragment() {
     protected fun addLoadingObserve(vararg viewModels: BaseViewModel){
         viewModels.forEach {viewModel ->
             //显示弹窗
-            viewModel.loadingChange.showDialog.observe(viewLifecycleOwner, Observer {
+            viewModel.loadingChange.showDialog.observe(viewLifecycleOwner, {
                 showLoading(it)
             })
             //关闭弹窗
-            viewModel.loadingChange.dismissDialog.observe(viewLifecycleOwner, Observer {
+            viewModel.loadingChange.dismissDialog.observe(viewLifecycleOwner, {
                 dismissLoading()
             })
         }

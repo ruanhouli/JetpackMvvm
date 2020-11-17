@@ -5,14 +5,13 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_collect.*
 import kotlinx.android.synthetic.main.include_toolbar.*
 import me.hgj.jetpackmvvm.demo.R
-import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestCollectViewModel
 import me.hgj.jetpackmvvm.demo.app.base.BaseFragment
 import me.hgj.jetpackmvvm.demo.app.ext.bindViewPager2
 import me.hgj.jetpackmvvm.demo.app.ext.init
 import me.hgj.jetpackmvvm.demo.app.ext.initClose
 import me.hgj.jetpackmvvm.demo.databinding.FragmentCollectBinding
+import me.hgj.jetpackmvvm.demo.viewmodel.request.RequestCollectViewModel
 import me.hgj.jetpackmvvm.ext.nav
-import me.hgj.jetpackmvvm.ext.util.logd
 
 /**
  * 作者　: hegaojian
@@ -38,7 +37,7 @@ class CollectFragment:BaseFragment<RequestCollectViewModel,FragmentCollectBindin
         collect_view_pager.init(this,fragments)
         //初始化 magic_indicator
         collect_magic_indicator.bindViewPager2(collect_view_pager,mStringList = titleData)
-        toolbar.initClose(){
+        toolbar.initClose {
             nav().navigateUp()
         }
 

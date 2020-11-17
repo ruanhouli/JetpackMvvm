@@ -1,13 +1,10 @@
 package me.hgj.jetpackmvvm.demo.ui.fragment.demo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import com.liulishuo.filedownloader.FileDownloader
-import kotlinx.android.synthetic.main.fragment_demo.*
-import kotlinx.android.synthetic.main.fragment_download.*
 import kotlinx.android.synthetic.main.fragment_download_library.*
 import kotlinx.android.synthetic.main.include_toolbar.*
-import kotlinx.android.synthetic.main.layout_custom_progress_dialog_view.*
 import me.hgj.jetpackmvvm.base.appContext
 import me.hgj.jetpackmvvm.demo.R
 import me.hgj.jetpackmvvm.demo.app.base.BaseFragment
@@ -25,7 +22,8 @@ import me.hgj.jetpackmvvm.ext.util.logd
  * @author : hgj
  * @date   : 2020/7/13
  */
-class DownLoadLibraryFragment : BaseFragment<DownloadLibraryViewModel, FragmentDownloadLibraryBinding>() {
+class DownLoadLibraryFragment :
+    BaseFragment<DownloadLibraryViewModel, FragmentDownloadLibraryBinding>() {
 
     override fun layoutId() = R.layout.fragment_download_library
 
@@ -38,8 +36,9 @@ class DownLoadLibraryFragment : BaseFragment<DownloadLibraryViewModel, FragmentD
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun createObserver() {
-        mViewModel.downloadData.observe(viewLifecycleOwner, Observer {
+        mViewModel.downloadData.observe(viewLifecycleOwner, {
             when (it) {
                 is DownloadResultState.Pending -> {
                     //开始下载
@@ -50,13 +49,15 @@ class DownLoadLibraryFragment : BaseFragment<DownloadLibraryViewModel, FragmentD
                     downloadLibraryProgressBar.progress = it.progress
                     "下载中 ${it.soFarBytes}/${it.totalBytes}".logd()
                     downloadLibraryProgress.text = "${it.progress}%"
-                    downloadLibrarySize.text = "${FileTool.bytes2kb(it.soFarBytes)}/${FileTool.bytes2kb(it.totalBytes)}"
+                    downloadLibrarySize.text =
+                        "${FileTool.bytes2kb(it.soFarBytes)}/${FileTool.bytes2kb(it.totalBytes)}"
                 }
                 is DownloadResultState.Success -> {
                     //下载成功
                     downloadLibraryProgressBar.progress = 100
                     downloadLibraryProgress.text = "100%"
-                    downloadLibrarySize.text ="${FileTool.bytes2kb(it.totalBytes)}/${FileTool.bytes2kb(it.totalBytes)}"
+                    downloadLibrarySize.text =
+                        "${FileTool.bytes2kb(it.totalBytes)}/${FileTool.bytes2kb(it.totalBytes)}"
                     showMessage("下载成功--文件地址：${it.filePath}")
                 }
                 is DownloadResultState.Pause -> {
@@ -79,9 +80,11 @@ class DownLoadLibraryFragment : BaseFragment<DownloadLibraryViewModel, FragmentD
                 "qq"
             )
         }
+
         fun cancel() {
             mViewModel.downloadCancel()
         }
+
         fun pause() {
             mViewModel.downloadPause()
         }

@@ -12,7 +12,6 @@ interface ApiService {
 
     companion object {
         const val SERVER_URL = "https://wanandroid.com/"
-        const val SERVER_URL1 = "https://wanandroid.com/"
     }
 
     /**
@@ -163,7 +162,7 @@ interface ApiService {
      * 取消收藏网址
      */
     @POST("lg/collect/deletetool/json")
-    suspend fun deletetool(@Query("id") id: Int): ApiResponse<Any?>
+    suspend fun deleteTool(@Query("id") id: Int): ApiResponse<Any?>
 
     /**
      * 获取收藏文章数据
@@ -181,7 +180,7 @@ interface ApiService {
      * 获取他人分享文章列表数据
      */
     @GET("user/{id}/share_articles/{page}/json")
-    suspend fun getShareByidData(
+    suspend fun getShareByIdData(
         @Path("id") id: Int,
         @Path("page") page: Int
     ): ApiResponse<ShareResponse>

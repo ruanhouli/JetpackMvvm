@@ -15,7 +15,6 @@ import javax.xml.transform.TransformerException
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.stream.StreamResult
 import javax.xml.transform.stream.StreamSource
-import kotlin.experimental.and
 
 /**
  * 作者　: hegaojian
@@ -53,14 +52,18 @@ class CharacterHandler private constructor() {
             var message: String
             try {
                 json = json.trim { it <= ' ' }
-                message = if (json.startsWith("{")) {
-                    val jsonObject = JSONObject(json)
-                    jsonObject.toString(4)
-                } else if (json.startsWith("[")) {
-                    val jsonArray = JSONArray(json)
-                    jsonArray.toString(4)
-                } else {
-                    json
+                message = when {
+                    json.startsWith("{") -> {
+                        val jsonObject = JSONObject(json)
+                        jsonObject.toString(4)
+                    }
+                    json.startsWith("[") -> {
+                        val jsonArray = JSONArray(json)
+                        jsonArray.toString(4)
+                    }
+                    else -> {
+                        json
+                    }
                 }
             } catch (e: JSONException) {
                 message = json

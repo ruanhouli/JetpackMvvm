@@ -7,6 +7,7 @@
 
 package me.hgj.jetpackmvvm.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -276,7 +277,7 @@ object ActivityMessenger {
      * @param src 发起的Activity
      * @param params extras键值对
      */
-    fun finish(src: Activity, vararg params: Pair<String, Any>) = with(src) {
+    private fun finish(src: Activity, vararg params: Pair<String, Any>) = with(src) {
         setResult(Activity.RESULT_OK, Intent().putExtras(*params))
         finish()
     }
@@ -421,6 +422,7 @@ class GhostFragment : Fragment() {
     }
 }
 
+@SuppressLint("DiscouragedPrivateApi")
 internal object IntentFieldMethod {
     lateinit var mExtras: Field
     lateinit var mMap: Field

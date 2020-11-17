@@ -129,13 +129,13 @@ class SearchFragment : BaseFragment<SearchViewModel, FragmentSearchBinding>() {
     override fun createObserver() {
         requestSearchViewModel.run {
             //监听热门数据变化
-            hotData.observe(viewLifecycleOwner, Observer {resultState->
+            hotData.observe(viewLifecycleOwner, { resultState->
                 parseState(resultState, {
                     hotAdapter.setList(it)
                 })
             })
             //监听历史数据变化
-            historyData.observe(viewLifecycleOwner, Observer {
+            historyData.observe(viewLifecycleOwner, {
                 historyAdapter.data = it
                 historyAdapter.notifyDataSetChanged()
                 CacheUtil.setSearchHistoryData(it.toJson())

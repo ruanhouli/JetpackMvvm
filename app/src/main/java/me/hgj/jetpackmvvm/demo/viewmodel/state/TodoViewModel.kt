@@ -30,12 +30,4 @@ class TodoViewModel : BaseViewModel() {
     //优先级颜色
     var todoColor =
         IntObservableField(TodoType.TodoType1.color)
-
-    fun xx(): Unit {
-        launch({
-
-        },{
-
-        })
-    }
 }

@@ -26,7 +26,7 @@ class SystemAdapter(data: ArrayList<SystemResponse>) :
     override fun convert(holder: BaseViewHolder, item: SystemResponse) {
         holder.setText(R.id.item_system_title, item.name.toHtml())
         holder.getView<RecyclerView>(R.id.item_system_rv).run {
-            val foxayoutManager: FlexboxLayoutManager by lazy {
+            val flexboxLayoutManager: FlexboxLayoutManager by lazy {
                 FlexboxLayoutManager(context).apply {
                     //方向 主轴为水平方向，起点在左端
                     flexDirection = FlexDirection.ROW
@@ -34,7 +34,7 @@ class SystemAdapter(data: ArrayList<SystemResponse>) :
                     justifyContent = JustifyContent.FLEX_START
                 }
             }
-            layoutManager = foxayoutManager
+            layoutManager = flexboxLayoutManager
             setHasFixedSize(true)
             setItemViewCacheSize(200)
             isNestedScrollingEnabled = false

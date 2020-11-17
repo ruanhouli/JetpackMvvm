@@ -17,7 +17,7 @@ class HomeBannerAdapter : BaseBannerAdapter<BannerResponse, HomeBannerViewHolder
     }
 
     override fun createViewHolder(itemView: View, viewType: Int): HomeBannerViewHolder {
-        return HomeBannerViewHolder(itemView);
+        return HomeBannerViewHolder(itemView)
     }
 
     override fun onBind(
@@ -26,7 +26,7 @@ class HomeBannerAdapter : BaseBannerAdapter<BannerResponse, HomeBannerViewHolder
         position: Int,
         pageSize: Int
     ) {
-        holder?.bindData(data, position, pageSize);
+        holder?.bindData(data, position, pageSize)
     }
 
 

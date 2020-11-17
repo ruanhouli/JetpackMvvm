@@ -43,7 +43,7 @@ class CollectAriticleFragment : BaseFragment<RequestCollectViewModel, IncludeLis
         //初始化recyclerView
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
-            it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            it.initFooter({
                 mViewModel.getCollectAriticleData(false)
             })
             //初始化FloatingActionButton
@@ -76,11 +76,11 @@ class CollectAriticleFragment : BaseFragment<RequestCollectViewModel, IncludeLis
     }
 
     override fun createObserver() {
-        mViewModel.ariticleDataState.observe(viewLifecycleOwner, Observer {
+        mViewModel.ariticleDataState.observe(viewLifecycleOwner, {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
             loadListData(it, articleAdapter, loadService, recyclerView,swipeRefresh)
         })
-        mViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
+        mViewModel.collectUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 //收藏或取消收藏操作成功，发送全局收藏消息
                 eventViewModel.collectEvent.value = CollectBus(it.id, it.collect)
@@ -99,7 +99,7 @@ class CollectAriticleFragment : BaseFragment<RequestCollectViewModel, IncludeLis
             collectEvent.observe(viewLifecycleOwner, Observer {
                 for (index in articleAdapter.data.indices) {
                     if (articleAdapter.data[index].originId == it.id) {
-                        articleAdapter.remove(index)
+                        articleAdapter.removeAt(index)
                         if (articleAdapter.data.size == 0) {
                             loadService.showEmpty()
                         }

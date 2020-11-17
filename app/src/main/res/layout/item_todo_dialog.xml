@@ -17,5 +17,5 @@
         android:layout_marginTop="4dp"
         android:text="QQ"
         android:textColor="@color/colorBlack666"
-        android:textSize="13dp" />
+        android:textSize="13sp" />
 </LinearLayout>

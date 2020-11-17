@@ -2,11 +2,9 @@ package me.hgj.jetpackmvvm.demo.ui.fragment.tree
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.ConvertUtils
 import com.kingja.loadsir.core.LoadService
-import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import kotlinx.android.synthetic.main.include_list.*
 import kotlinx.android.synthetic.main.include_recyclerview.*
 import me.hgj.jetpackmvvm.demo.R
@@ -62,9 +60,9 @@ class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
         //初始化recyclerView
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
-            footView = it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            footView = it.initFooter {
                 requestTreeViewModel.getSystemChildData(false, cid)
-            })
+            }
             //初始化FloatingActionButton
             it.initFloatBtn(floatbtn)
         }
@@ -74,20 +72,20 @@ class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
             requestTreeViewModel.getSystemChildData(true, cid)
         }
         articleAdapter.run {
-            setCollectClick { item, v, position ->
+            setCollectClick { item, v, _ ->
                 if (v.isChecked) {
                     requestCollectViewModel.uncollect(item.id)
                 } else {
                     requestCollectViewModel.collect(item.id)
                 }
             }
-            setOnItemClickListener { adapter, view, position ->
+            setOnItemClickListener { _, _, position ->
                 nav().navigateAction(R.id.action_to_webFragment, Bundle().apply {
                     putParcelable("articleData", articleAdapter.data[position])
                 })
             }
             addChildClickViewIds(R.id.item_home_author, R.id.item_project_author)
-            setOnItemChildClickListener { adapter, view, position ->
+            setOnItemChildClickListener { _, view, position ->
                 when (view.id) {
                     R.id.item_home_author, R.id.item_project_author -> {
                         nav().navigateAction(
@@ -108,12 +106,12 @@ class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
     }
 
     override fun createObserver() {
-        requestTreeViewModel.systemChildDataState.observe(viewLifecycleOwner, Observer {
+        requestTreeViewModel.systemChildDataState.observe(viewLifecycleOwner, {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
             loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
         })
 
-        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, Observer {
+        requestCollectViewModel.collectUiState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 //收藏或取消收藏操作成功，发送全局收藏消息
                 eventViewModel.collectEvent.value = CollectBus(it.id, it.collect)
@@ -130,7 +128,7 @@ class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
         })
         appViewModel.run {
             //监听账户信息是否改变 有值时(登录)将相关的数据设置为已收藏，为空时(退出登录)，将已收藏的数据变为未收藏
-            userinfo.observe(viewLifecycleOwner, Observer {
+            userinfo.observe(viewLifecycleOwner, {
                 if (it != null) {
                     it.collectIds.forEach { id ->
                         for (item in articleAdapter.data) {
@@ -149,7 +147,7 @@ class SystemChildFragment : BaseFragment<TreeViewModel, IncludeListBinding>() {
             })
         }
         //监听全局的收藏信息 收藏的Id跟本列表的数据id匹配则需要更新
-        eventViewModel.collectEvent.observe(viewLifecycleOwner, Observer {
+        eventViewModel.collectEvent.observe(viewLifecycleOwner, {
             for (index in articleAdapter.data.indices) {
                 if (articleAdapter.data[index].id == it.id) {
                     articleAdapter.data[index].collect = it.collect

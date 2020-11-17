@@ -175,16 +175,16 @@ object FileTool {
         val format = DecimalFormat("###.0")
         return when {
             bytes / GB >= 1 -> {
-                format.format(bytes / GB) + "GB";
+                format.format(bytes / GB) + "GB"
             }
             bytes / MB >= 1 -> {
-                format.format(bytes / MB) + "MB";
+                format.format(bytes / MB) + "MB"
             }
             bytes / KB >= 1 -> {
-                format.format(bytes / KB) + "KB";
+                format.format(bytes / KB) + "KB"
             }
             else -> {
-                "${bytes}B";
+                "${bytes}B"
             }
         }
     }

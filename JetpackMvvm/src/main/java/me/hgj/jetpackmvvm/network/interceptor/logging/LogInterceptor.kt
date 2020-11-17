@@ -1,6 +1,5 @@
 package me.hgj.jetpackmvvm.network.interceptor.logging
 
-import android.util.Log
 import me.hgj.jetpackmvvm.ext.util.logd
 import me.hgj.jetpackmvvm.util.CharacterHandler.Companion.jsonFormat
 import me.hgj.jetpackmvvm.util.UrlEncoderUtils.Companion.hasUrlEncoded
@@ -20,8 +19,8 @@ class LogInterceptor : Interceptor {
     private val printLevel =
         Level.ALL
 
-    constructor() {}
-    constructor(printLevel: Level?) {}
+    constructor()
+    constructor(printLevel: Level?)
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -138,21 +137,25 @@ class LogInterceptor : Interceptor {
             charset = contentType.charset(charset)
         }
         //content 使用 gzip 压缩
-        return if ("gzip".equals(encoding, ignoreCase = true)) {
-            //解压
-            decompressForGzip(
-                clone.readByteArray(),
-                convertCharset(charset)
-            )
-        } else if ("zlib".equals(encoding, ignoreCase = true)) {
-            //content 使用 zlib 压缩
-            decompressToStringForZlib(
-                clone.readByteArray(),
-                convertCharset(charset)
-            )
-        } else {
-            //content 没有被压缩, 或者使用其他未知压缩方式
-            clone.readString(charset)
+        return when {
+            "gzip".equals(encoding, ignoreCase = true) -> {
+                //解压
+                decompressForGzip(
+                    clone.readByteArray(),
+                    convertCharset(charset)
+                )
+            }
+            "zlib".equals(encoding, ignoreCase = true) -> {
+                //content 使用 zlib 压缩
+                decompressToStringForZlib(
+                    clone.readByteArray(),
+                    convertCharset(charset)
+                )
+            }
+            else -> {
+                //content 没有被压缩, 或者使用其他未知压缩方式
+                clone.readString(charset)
+            }
         }
     }
 
@@ -241,7 +244,7 @@ class LogInterceptor : Interceptor {
             return if (mediaType?.subtype() == null) {
                 false
             } else mediaType.subtype()
-                .toLowerCase().contains("plain")
+                .toLowerCase(Locale.getDefault()).contains("plain")
         }
 
         @JvmStatic

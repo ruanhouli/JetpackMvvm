@@ -64,7 +64,7 @@ class AriticleFragment : BaseFragment<AriticleViewModel, FragmentListBinding>() 
         //初始化recyclerView
         recyclerView.init(LinearLayoutManager(context), articleAdapter).let {
             it.addItemDecoration(SpaceItemDecoration(0, ConvertUtils.dp2px(8f)))
-            it.initFooter(SwipeRecyclerView.LoadMoreListener {
+            it.initFooter({
                 //触发加载更多时请求数据
                 requestViewModel.getShareData(false)
             })
@@ -106,23 +106,23 @@ class AriticleFragment : BaseFragment<AriticleViewModel, FragmentListBinding>() 
     }
 
     override fun createObserver() {
-        requestViewModel.shareDataState.observe(viewLifecycleOwner, Observer {
+        requestViewModel.shareDataState.observe(viewLifecycleOwner, {
             //设值 新写了个拓展函数，搞死了这个恶心的重复代码
-            loadListData(it, articleAdapter, loadService, recyclerView,swipeRefresh)
+            loadListData(it, articleAdapter, loadService, recyclerView, swipeRefresh)
         })
-        requestViewModel.delDataState.observe(viewLifecycleOwner, Observer {
+        requestViewModel.delDataState.observe(viewLifecycleOwner, {
             if (it.isSuccess) {
                 //删除成功 如果是删除的最后一个了，那么直接把界面设置为空布局
                 if (articleAdapter.data.size == 1) {
                     loadService.showEmpty()
                 }
-                articleAdapter.remove(it.data!!)
+                articleAdapter.removeAt(it.data!!)
             } else {
                 //删除失败，提示
                 showMessage(it.errorMsg)
             }
         })
-        eventViewModel.shareArticleEvent.observe(viewLifecycleOwner, Observer {
+        eventViewModel.shareArticleEvent.observe(viewLifecycleOwner, {
             if (articleAdapter.data.size == 0) {
                 //界面没有数据时，变为加载中 增强一丢丢体验
                 loadService.showLoading()

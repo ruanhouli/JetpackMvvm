@@ -7,7 +7,7 @@
     android:layout_margin="6dp"
     android:background="@drawable/flow_selector"
     android:gravity="center"
-    android:textSize="15dp"
+    android:textSize="15sp"
     android:paddingTop="6dp"
     android:paddingBottom="6dp"
     android:paddingStart="10dp"

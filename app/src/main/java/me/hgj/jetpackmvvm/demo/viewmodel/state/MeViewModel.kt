@@ -20,6 +20,4 @@ class MeViewModel : BaseViewModel() {
     var info = StringObservableField("id：--　排名：-")
 
     var imageUrl = StringObservableField(ColorUtil.randomImage())
-
-    var testString = UnPeekLiveData<String>()
 }
